@@ -1,3 +1,14 @@
+## ---------------------------
+##
+## Script name: ntl-prod-cons-troutlake.R
+##
+## Purpose of script: munging data from spiny invasion in Trout for SPARC project
+##
+## Author: Grace Wilkinson
+##
+## Email: gwilkinson@wisc.edu
+##
+## ------------------------
 
 library(tidyverse)
 library(lubridate)
@@ -48,7 +59,7 @@ tmp1sampledate<-as.Date(dt1$sampledate,format=tmpDateFormat)
 if(length(tmp1sampledate) == length(tmp1sampledate[!is.na(tmp1sampledate)])){dt1$sampledate <- tmp1sampledate } else {print("Date conversion failed for dt1$sampledate. Please inspect the data and do the date conversion yourself.")}                                                                    
 chem = dt1 %>%
   select(lakeid, year4, daynum, sampledate, depth, 
-         doc, totnf, totnuf, totpf, totpuf) %>%
+         totnf, totnuf, totpf, totpuf) %>%
   filter(lakeid=="TR") %>%
   filter(year4>=2007) %>%
   filter(depth<=5) %>%
@@ -61,7 +72,7 @@ chem = dt1 %>%
 chem_wide = pivot_wider(chem, 
                         id_cols = c(year4, sampledate),
                         names_from = depth, 
-                        values_from = c(doc, totnf, totnuf, totpf, totpuf))
+                        values_from = c(totnf, totnuf, totpf, totpuf))
 
 # Package ID: knb-lter-ntl.35.32 Cataloging System:https://pasta.edirepository.org.
 # Data set title: North Temperate Lakes LTER: Chlorophyll - Trout Lake Area 1981 - current.
@@ -176,5 +187,8 @@ ntl_prod_cons = left_join(chem_chl_merge, zoops_wide,
 # Create a column for the disturbance event
 ntl_prod_cons$spiny_dist = NA
 ntl_trout = ntl_prod_cons %>%
-  mutate(Spiny_dist = case_when(year4 < 2014 ~ "pre",
+  mutate(spiny_dist = case_when(year4 < 2014 ~ "pre",
                                 year4 >= 2014 ~ "post"))
+
+#Save the file
+# write.csv(ntl_trout, file = "NTL_TroutLake_SpinyWaterFlea.csv")
