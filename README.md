@@ -3,7 +3,7 @@
 ## PIs: 
 
 - Pierre Marrec (Postdoctoral Fellow, Graduate School of Oceanography, University of Rhode Island)
-- Grace Wilkinson (Associate Professor, University of Wisconsin)
+- Grace Wilkinson (Associate Professor, University of Wisconsin - Madison)
 
 ## Project Summary
 
