@@ -499,21 +499,282 @@ write.csv(x = dt5, row.names = F, na = '',
           file = file.path("LTER-NWT-WarrenS24", "demography-krumm.csv"))
 
 ## ---------------------------------- ##
-# Composition Housekeeping ----
+    # Composition Housekeeping ----
 ## ---------------------------------- ##
 
 # Clear environment (reduces errors due to object name re-use)
 rm(list = ls())
 
 ## ---------------------------------- ##
-# Soil Characteristics ----
+      # Soil Characteristics ----
 ## ---------------------------------- ##
 # EDI data package URL:
 ## https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-nwt.238.4
 
+# Package ID: knb-lter-nwt.238.4 Cataloging System:https://pasta.edirepository.org.
+# Data set title: Soil moisture, temperature, and electrical conductivity data from the black sand extended growing season length experiment, 2018 - ongoing, hourly..
+# Data set creator:  Jennifer F Morse -  
+# Data set creator:    - Niwot Ridge LTER 
+# Contact:    - Information Manager Niwot Ridge LTER  - lternwt@colorado.edu
+# Stylesheet v2.11 for metadata conversion into program: John H. Porter, Univ. Virginia, jporter@virginia.edu 
+
+inUrl1  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-nwt/238/4/b36aceff9dfcd5be5c98e47e21470f23" 
+infile1 <- tempfile()
+try(download.file(inUrl1,infile1,method="curl"))
+if (is.na(file.size(infile1))) download.file(inUrl1,infile1,method="auto")
+
+
+dt1 <-read.csv(infile1,header=F 
+               ,skip=1
+               ,sep=","  
+               , col.names=c(
+                 "LTER_site",     
+                 "local_site",     
+                 "date",     
+                 "soiltemp5_5cm_avg",     
+                 "flag_soiltemp5_5cm_avg",     
+                 "ec5_5cm_avg",     
+                 "flag_ec5_5cm_avg",     
+                 "soilmoisture5_5cm_avg",     
+                 "flag_soilmoisture5_5cm_avg",     
+                 "soiltemp6_5cm_avg",     
+                 "flag_soiltemp6_5cm_avg",     
+                 "ec6_5cm_avg",     
+                 "flag_ec6_5cm_avg",     
+                 "soilmoisture6_5cm_avg",     
+                 "flag_soilmoisture6_5cm_avg",     
+                 "soiltemp7_5cm_avg",     
+                 "flag_soiltemp7_5cm_avg",     
+                 "ec7_5cm_avg",     
+                 "flag_ec7_5cm_avg",     
+                 "soilmoisture7_5cm_avg",     
+                 "flag_soilmoisture7_5cm_avg",     
+                 "soiltemp8_5cm_avg",     
+                 "flag_soiltemp8_5cm_avg",     
+                 "ec8_5cm_avg",     
+                 "flag_ec8_5cm_avg",     
+                 "soilmoisture8_5cm_avg",     
+                 "flag_soilmoisture8_5cm_avg",     
+                 "batt_volt_min",     
+                 "flag_batt_volt_min"    ), check.names=TRUE)
+
+unlink(infile1)
+
+# Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
+
+if (class(dt1$LTER_site)!="factor") dt1$LTER_site<- as.factor(dt1$LTER_site)
+if (class(dt1$local_site)!="factor") dt1$local_site<- as.factor(dt1$local_site)                                   
+# attempting to convert dt1$date dateTime string to R date structure (date or POSIXct)                                
+tmpDateFormat<-"%Y-%m-%d %H:%M:%S" 
+tmp1date<-as.POSIXct(dt1$date,format=tmpDateFormat)
+# Keep the new dates only if they all converted correctly
+if(length(tmp1date) == length(tmp1date[!is.na(tmp1date)])){dt1$date <- tmp1date } else {print("Date conversion failed for dt1$date. Please inspect the data and do the date conversion yourself.")}                                                                    
+rm(tmpDateFormat,tmp1date) 
+if (class(dt1$soiltemp5_5cm_avg)=="factor") dt1$soiltemp5_5cm_avg <-as.numeric(levels(dt1$soiltemp5_5cm_avg))[as.integer(dt1$soiltemp5_5cm_avg) ]               
+if (class(dt1$soiltemp5_5cm_avg)=="character") dt1$soiltemp5_5cm_avg <-as.numeric(dt1$soiltemp5_5cm_avg)
+if (class(dt1$flag_soiltemp5_5cm_avg)!="factor") dt1$flag_soiltemp5_5cm_avg<- as.factor(dt1$flag_soiltemp5_5cm_avg)
+if (class(dt1$ec5_5cm_avg)=="factor") dt1$ec5_5cm_avg <-as.numeric(levels(dt1$ec5_5cm_avg))[as.integer(dt1$ec5_5cm_avg) ]               
+if (class(dt1$ec5_5cm_avg)=="character") dt1$ec5_5cm_avg <-as.numeric(dt1$ec5_5cm_avg)
+if (class(dt1$flag_ec5_5cm_avg)!="factor") dt1$flag_ec5_5cm_avg<- as.factor(dt1$flag_ec5_5cm_avg)
+if (class(dt1$soilmoisture5_5cm_avg)=="factor") dt1$soilmoisture5_5cm_avg <-as.numeric(levels(dt1$soilmoisture5_5cm_avg))[as.integer(dt1$soilmoisture5_5cm_avg) ]               
+if (class(dt1$soilmoisture5_5cm_avg)=="character") dt1$soilmoisture5_5cm_avg <-as.numeric(dt1$soilmoisture5_5cm_avg)
+if (class(dt1$flag_soilmoisture5_5cm_avg)!="factor") dt1$flag_soilmoisture5_5cm_avg<- as.factor(dt1$flag_soilmoisture5_5cm_avg)
+if (class(dt1$soiltemp6_5cm_avg)=="factor") dt1$soiltemp6_5cm_avg <-as.numeric(levels(dt1$soiltemp6_5cm_avg))[as.integer(dt1$soiltemp6_5cm_avg) ]               
+if (class(dt1$soiltemp6_5cm_avg)=="character") dt1$soiltemp6_5cm_avg <-as.numeric(dt1$soiltemp6_5cm_avg)
+if (class(dt1$flag_soiltemp6_5cm_avg)!="factor") dt1$flag_soiltemp6_5cm_avg<- as.factor(dt1$flag_soiltemp6_5cm_avg)
+if (class(dt1$ec6_5cm_avg)=="factor") dt1$ec6_5cm_avg <-as.numeric(levels(dt1$ec6_5cm_avg))[as.integer(dt1$ec6_5cm_avg) ]               
+if (class(dt1$ec6_5cm_avg)=="character") dt1$ec6_5cm_avg <-as.numeric(dt1$ec6_5cm_avg)
+if (class(dt1$flag_ec6_5cm_avg)!="factor") dt1$flag_ec6_5cm_avg<- as.factor(dt1$flag_ec6_5cm_avg)
+if (class(dt1$soilmoisture6_5cm_avg)=="factor") dt1$soilmoisture6_5cm_avg <-as.numeric(levels(dt1$soilmoisture6_5cm_avg))[as.integer(dt1$soilmoisture6_5cm_avg) ]               
+if (class(dt1$soilmoisture6_5cm_avg)=="character") dt1$soilmoisture6_5cm_avg <-as.numeric(dt1$soilmoisture6_5cm_avg)
+if (class(dt1$flag_soilmoisture6_5cm_avg)!="factor") dt1$flag_soilmoisture6_5cm_avg<- as.factor(dt1$flag_soilmoisture6_5cm_avg)
+if (class(dt1$soiltemp7_5cm_avg)=="factor") dt1$soiltemp7_5cm_avg <-as.numeric(levels(dt1$soiltemp7_5cm_avg))[as.integer(dt1$soiltemp7_5cm_avg) ]               
+if (class(dt1$soiltemp7_5cm_avg)=="character") dt1$soiltemp7_5cm_avg <-as.numeric(dt1$soiltemp7_5cm_avg)
+if (class(dt1$flag_soiltemp7_5cm_avg)!="factor") dt1$flag_soiltemp7_5cm_avg<- as.factor(dt1$flag_soiltemp7_5cm_avg)
+if (class(dt1$ec7_5cm_avg)=="factor") dt1$ec7_5cm_avg <-as.numeric(levels(dt1$ec7_5cm_avg))[as.integer(dt1$ec7_5cm_avg) ]               
+if (class(dt1$ec7_5cm_avg)=="character") dt1$ec7_5cm_avg <-as.numeric(dt1$ec7_5cm_avg)
+if (class(dt1$flag_ec7_5cm_avg)!="factor") dt1$flag_ec7_5cm_avg<- as.factor(dt1$flag_ec7_5cm_avg)
+if (class(dt1$soilmoisture7_5cm_avg)=="factor") dt1$soilmoisture7_5cm_avg <-as.numeric(levels(dt1$soilmoisture7_5cm_avg))[as.integer(dt1$soilmoisture7_5cm_avg) ]               
+if (class(dt1$soilmoisture7_5cm_avg)=="character") dt1$soilmoisture7_5cm_avg <-as.numeric(dt1$soilmoisture7_5cm_avg)
+if (class(dt1$flag_soilmoisture7_5cm_avg)!="factor") dt1$flag_soilmoisture7_5cm_avg<- as.factor(dt1$flag_soilmoisture7_5cm_avg)
+if (class(dt1$soiltemp8_5cm_avg)=="factor") dt1$soiltemp8_5cm_avg <-as.numeric(levels(dt1$soiltemp8_5cm_avg))[as.integer(dt1$soiltemp8_5cm_avg) ]               
+if (class(dt1$soiltemp8_5cm_avg)=="character") dt1$soiltemp8_5cm_avg <-as.numeric(dt1$soiltemp8_5cm_avg)
+if (class(dt1$flag_soiltemp8_5cm_avg)!="factor") dt1$flag_soiltemp8_5cm_avg<- as.factor(dt1$flag_soiltemp8_5cm_avg)
+if (class(dt1$ec8_5cm_avg)=="factor") dt1$ec8_5cm_avg <-as.numeric(levels(dt1$ec8_5cm_avg))[as.integer(dt1$ec8_5cm_avg) ]               
+if (class(dt1$ec8_5cm_avg)=="character") dt1$ec8_5cm_avg <-as.numeric(dt1$ec8_5cm_avg)
+if (class(dt1$flag_ec8_5cm_avg)!="factor") dt1$flag_ec8_5cm_avg<- as.factor(dt1$flag_ec8_5cm_avg)
+if (class(dt1$soilmoisture8_5cm_avg)=="factor") dt1$soilmoisture8_5cm_avg <-as.numeric(levels(dt1$soilmoisture8_5cm_avg))[as.integer(dt1$soilmoisture8_5cm_avg) ]               
+if (class(dt1$soilmoisture8_5cm_avg)=="character") dt1$soilmoisture8_5cm_avg <-as.numeric(dt1$soilmoisture8_5cm_avg)
+if (class(dt1$flag_soilmoisture8_5cm_avg)!="factor") dt1$flag_soilmoisture8_5cm_avg<- as.factor(dt1$flag_soilmoisture8_5cm_avg)
+if (class(dt1$batt_volt_min)=="factor") dt1$batt_volt_min <-as.numeric(levels(dt1$batt_volt_min))[as.integer(dt1$batt_volt_min) ]               
+if (class(dt1$batt_volt_min)=="character") dt1$batt_volt_min <-as.numeric(dt1$batt_volt_min)
+if (class(dt1$flag_batt_volt_min)!="factor") dt1$flag_batt_volt_min<- as.factor(dt1$flag_batt_volt_min)
+
+# Convert Missing Values to NA for non-dates
+
+dt1$soiltemp5_5cm_avg <- ifelse((trimws(as.character(dt1$soiltemp5_5cm_avg))==trimws("NaN")),NA,dt1$soiltemp5_5cm_avg)               
+suppressWarnings(dt1$soiltemp5_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soiltemp5_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soiltemp5_5cm_avg))
+dt1$flag_soiltemp5_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soiltemp5_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soiltemp5_5cm_avg)))
+dt1$ec5_5cm_avg <- ifelse((trimws(as.character(dt1$ec5_5cm_avg))==trimws("NaN")),NA,dt1$ec5_5cm_avg)               
+suppressWarnings(dt1$ec5_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$ec5_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$ec5_5cm_avg))
+dt1$flag_ec5_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_ec5_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_ec5_5cm_avg)))
+dt1$soilmoisture5_5cm_avg <- ifelse((trimws(as.character(dt1$soilmoisture5_5cm_avg))==trimws("NaN")),NA,dt1$soilmoisture5_5cm_avg)               
+suppressWarnings(dt1$soilmoisture5_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soilmoisture5_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soilmoisture5_5cm_avg))
+dt1$flag_soilmoisture5_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soilmoisture5_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soilmoisture5_5cm_avg)))
+dt1$soiltemp6_5cm_avg <- ifelse((trimws(as.character(dt1$soiltemp6_5cm_avg))==trimws("NaN")),NA,dt1$soiltemp6_5cm_avg)               
+suppressWarnings(dt1$soiltemp6_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soiltemp6_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soiltemp6_5cm_avg))
+dt1$flag_soiltemp6_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soiltemp6_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soiltemp6_5cm_avg)))
+dt1$ec6_5cm_avg <- ifelse((trimws(as.character(dt1$ec6_5cm_avg))==trimws("NaN")),NA,dt1$ec6_5cm_avg)               
+suppressWarnings(dt1$ec6_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$ec6_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$ec6_5cm_avg))
+dt1$flag_ec6_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_ec6_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_ec6_5cm_avg)))
+dt1$soilmoisture6_5cm_avg <- ifelse((trimws(as.character(dt1$soilmoisture6_5cm_avg))==trimws("NaN")),NA,dt1$soilmoisture6_5cm_avg)               
+suppressWarnings(dt1$soilmoisture6_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soilmoisture6_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soilmoisture6_5cm_avg))
+dt1$flag_soilmoisture6_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soilmoisture6_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soilmoisture6_5cm_avg)))
+dt1$soiltemp7_5cm_avg <- ifelse((trimws(as.character(dt1$soiltemp7_5cm_avg))==trimws("NaN")),NA,dt1$soiltemp7_5cm_avg)               
+suppressWarnings(dt1$soiltemp7_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soiltemp7_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soiltemp7_5cm_avg))
+dt1$flag_soiltemp7_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soiltemp7_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soiltemp7_5cm_avg)))
+dt1$ec7_5cm_avg <- ifelse((trimws(as.character(dt1$ec7_5cm_avg))==trimws("NaN")),NA,dt1$ec7_5cm_avg)               
+suppressWarnings(dt1$ec7_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$ec7_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$ec7_5cm_avg))
+dt1$flag_ec7_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_ec7_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_ec7_5cm_avg)))
+dt1$soilmoisture7_5cm_avg <- ifelse((trimws(as.character(dt1$soilmoisture7_5cm_avg))==trimws("NaN")),NA,dt1$soilmoisture7_5cm_avg)               
+suppressWarnings(dt1$soilmoisture7_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soilmoisture7_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soilmoisture7_5cm_avg))
+dt1$flag_soilmoisture7_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soilmoisture7_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soilmoisture7_5cm_avg)))
+dt1$soiltemp8_5cm_avg <- ifelse((trimws(as.character(dt1$soiltemp8_5cm_avg))==trimws("NaN")),NA,dt1$soiltemp8_5cm_avg)               
+suppressWarnings(dt1$soiltemp8_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soiltemp8_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soiltemp8_5cm_avg))
+dt1$flag_soiltemp8_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soiltemp8_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soiltemp8_5cm_avg)))
+dt1$ec8_5cm_avg <- ifelse((trimws(as.character(dt1$ec8_5cm_avg))==trimws("NaN")),NA,dt1$ec8_5cm_avg)               
+suppressWarnings(dt1$ec8_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$ec8_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$ec8_5cm_avg))
+dt1$flag_ec8_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_ec8_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_ec8_5cm_avg)))
+dt1$soilmoisture8_5cm_avg <- ifelse((trimws(as.character(dt1$soilmoisture8_5cm_avg))==trimws("NaN")),NA,dt1$soilmoisture8_5cm_avg)               
+suppressWarnings(dt1$soilmoisture8_5cm_avg <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$soilmoisture8_5cm_avg))==as.character(as.numeric("NaN"))),NA,dt1$soilmoisture8_5cm_avg))
+dt1$flag_soilmoisture8_5cm_avg <- as.factor(ifelse((trimws(as.character(dt1$flag_soilmoisture8_5cm_avg))==trimws("NaN")),NA,as.character(dt1$flag_soilmoisture8_5cm_avg)))
+dt1$batt_volt_min <- ifelse((trimws(as.character(dt1$batt_volt_min))==trimws("NaN")),NA,dt1$batt_volt_min)               
+suppressWarnings(dt1$batt_volt_min <- ifelse(!is.na(as.numeric("NaN")) & (trimws(as.character(dt1$batt_volt_min))==as.character(as.numeric("NaN"))),NA,dt1$batt_volt_min))
+dt1$flag_batt_volt_min <- as.factor(ifelse((trimws(as.character(dt1$flag_batt_volt_min))==trimws("NaN")),NA,as.character(dt1$flag_batt_volt_min)))
+
+
+# Here is the structure of the input data frame:
+str(dt1)                            
+attach(dt1)                            
+# The analyses below are basic descriptions of the variables. After testing, they should be replaced.                 
+
+summary(LTER_site)
+summary(local_site)
+summary(date)
+summary(soiltemp5_5cm_avg)
+summary(flag_soiltemp5_5cm_avg)
+summary(ec5_5cm_avg)
+summary(flag_ec5_5cm_avg)
+summary(soilmoisture5_5cm_avg)
+summary(flag_soilmoisture5_5cm_avg)
+summary(soiltemp6_5cm_avg)
+summary(flag_soiltemp6_5cm_avg)
+summary(ec6_5cm_avg)
+summary(flag_ec6_5cm_avg)
+summary(soilmoisture6_5cm_avg)
+summary(flag_soilmoisture6_5cm_avg)
+summary(soiltemp7_5cm_avg)
+summary(flag_soiltemp7_5cm_avg)
+summary(ec7_5cm_avg)
+summary(flag_ec7_5cm_avg)
+summary(soilmoisture7_5cm_avg)
+summary(flag_soilmoisture7_5cm_avg)
+summary(soiltemp8_5cm_avg)
+summary(flag_soiltemp8_5cm_avg)
+summary(ec8_5cm_avg)
+summary(flag_ec8_5cm_avg)
+summary(soilmoisture8_5cm_avg)
+summary(flag_soilmoisture8_5cm_avg)
+summary(batt_volt_min)
+summary(flag_batt_volt_min) 
+# Get more details on character variables
+
+summary(as.factor(dt1$LTER_site)) 
+summary(as.factor(dt1$local_site)) 
+summary(as.factor(dt1$flag_soiltemp5_5cm_avg)) 
+summary(as.factor(dt1$flag_ec5_5cm_avg)) 
+summary(as.factor(dt1$flag_soilmoisture5_5cm_avg)) 
+summary(as.factor(dt1$flag_soiltemp6_5cm_avg)) 
+summary(as.factor(dt1$flag_ec6_5cm_avg)) 
+summary(as.factor(dt1$flag_soilmoisture6_5cm_avg)) 
+summary(as.factor(dt1$flag_soiltemp7_5cm_avg)) 
+summary(as.factor(dt1$flag_ec7_5cm_avg)) 
+summary(as.factor(dt1$flag_soilmoisture7_5cm_avg)) 
+summary(as.factor(dt1$flag_soiltemp8_5cm_avg)) 
+summary(as.factor(dt1$flag_ec8_5cm_avg)) 
+summary(as.factor(dt1$flag_soilmoisture8_5cm_avg)) 
+summary(as.factor(dt1$flag_batt_volt_min))
+detach(dt1)               
+
+
+inUrl2  <- "https://pasta.lternet.edu/package/data/eml/knb-lter-nwt/238/4/024605e81d0308609981d83268388934" 
+infile2 <- tempfile()
+try(download.file(inUrl2,infile2,method="curl"))
+if (is.na(file.size(infile2))) download.file(inUrl2,infile2,method="auto")
+
+
+dt2 <-read.csv(infile2,header=F 
+               ,skip=1
+               ,sep=","  
+               ,quot='"' 
+               , col.names=c(
+                 "sensor",     
+                 "latitude",     
+                 "longitude",     
+                 "elevation",     
+                 "distance_from_lower_edge_of_plot"    ), check.names=TRUE)
+
+unlink(infile2)
+
+# Fix any interval or ratio columns mistakenly read in as nominal and nominal columns read as numeric or dates read as strings
+
+if (class(dt2$sensor)!="factor") dt2$sensor<- as.factor(dt2$sensor)
+if (class(dt2$latitude)=="factor") dt2$latitude <-as.numeric(levels(dt2$latitude))[as.integer(dt2$latitude) ]               
+if (class(dt2$latitude)=="character") dt2$latitude <-as.numeric(dt2$latitude)
+if (class(dt2$longitude)=="factor") dt2$longitude <-as.numeric(levels(dt2$longitude))[as.integer(dt2$longitude) ]               
+if (class(dt2$longitude)=="character") dt2$longitude <-as.numeric(dt2$longitude)
+if (class(dt2$elevation)=="factor") dt2$elevation <-as.numeric(levels(dt2$elevation))[as.integer(dt2$elevation) ]               
+if (class(dt2$elevation)=="character") dt2$elevation <-as.numeric(dt2$elevation)
+if (class(dt2$distance_from_lower_edge_of_plot)=="factor") dt2$distance_from_lower_edge_of_plot <-as.numeric(levels(dt2$distance_from_lower_edge_of_plot))[as.integer(dt2$distance_from_lower_edge_of_plot) ]               
+if (class(dt2$distance_from_lower_edge_of_plot)=="character") dt2$distance_from_lower_edge_of_plot <-as.numeric(dt2$distance_from_lower_edge_of_plot)
+
+# Convert Missing Values to NA for non-dates
 
 
 
+# Here is the structure of the input data frame:
+str(dt2)                            
+attach(dt2)                            
+# The analyses below are basic descriptions of the variables. After testing, they should be replaced.                 
 
+summary(sensor)
+summary(latitude)
+summary(longitude)
+summary(elevation)
+summary(distance_from_lower_edge_of_plot) 
+# Get more details on character variables
+
+summary(as.factor(dt2$sensor))
+detach(dt2)               
+
+## ---------------------------------- ##
+      # Export Characteristics ----
+## ---------------------------------- ##
+
+# Export these locally
+## Soil Characteristics (data)
+write.csv(x = dt1, row.names = F, na = '',
+          file = file.path("LTER-NWT-WarrenS24", "soil-sensor-data.csv"))
+
+## Soil Characteristics (sensor locations)
+write.csv(x = dt2, row.names = F, na = '',
+          file = file.path("LTER-NWT-WarrenS24", "soil-sensor-loc.csv"))
+
+## ---------------------------------- ##
+  # Characteristic Housekeeping ----
+## ---------------------------------- ##
+
+# Clear environment (reduces errors due to object name re-use)
+rm(list = ls())
 
 # End ----
