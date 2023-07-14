@@ -43,3 +43,7 @@ vignettes/*.pdf
 
 # DS_Store (for Mac users)
 .DS_Store
+
+# Any data files to ignore?
+LTER-NWT-WarrenS24/*.csv
+
