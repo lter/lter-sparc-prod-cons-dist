@@ -1,0 +1,205 @@
+plot,plot_2,latitude,longitude,slope_degrees,Aspect,Date,invasives,recent_timber_harvest,Observers,Other_notes
+1 00,1_00,42.318627 N,72.389614 W,1,east,13-Jul,no,no,"IC, GS, CM",
+1 01,1_01,42.318464 N,72.390035 W,0,flat,13-Jul,no,no,"GS, CM, IC",
+1 03,1_03,42.32352 N,72.37852 W,0,flat,13-Jun,no,yes,"GS, ABP, MP, DS",
+1 07,1_07,42.32152 N,72.37846 W,4,south,13-Jun,no,yes,"GS, ABP, MP, DS",at least one big oak stump slash
+1 09,1_09,42.31828 N,72.37581 W,10,south,13-Jun,no,yes,"DS, GS, MP, ABP","no invasives, large area, a lot of dead oak"
+1 13,1_13,42.32410 N,72.3874 W,2,west,13-Jun,no,no,"GS, ABP, MP, DS",Baby and mom black and white warbler on the ground; no invasives
+1 19,1_19,42.31931 N,72.37991 W,5,south,13-Jun,no,yes,"DS, GS, ABP, MP","Many trees have some dieback, but not significantly enough"
+1 23,1_23,42.31988 N,72.38580 W,10,southwest,13-Jun,no,no,"MP, GS, DS, ABP",
+1 28,1_28,42.32103 N,72.38164 W,,,8-Jun,yes,yes,"MP, GS, ABP, CM",Spruce planting area; possibly Norway spruce?
+1 29,1_29,42.32129 N,72.37852 W,8,south,13-Jun,no,yes,"ABP, DS, GS, MP",On the edge of timber harvest; very close to 1-7; no invasive plants noted
+1 30,1_30,42.31941 N,72.32328 W,,,8-Jun,no,yes,"ABP, GS, MP, CM","some spruces in understory, us is mixed HW/C depending on direction we look, previous notes say oak but we saw more maple birch"
+1 31,1_31,42.31736 N,72.37719 W,10,south,13-Jun,no,yes,"GS, DS, MP, ABP",Same timber harvest as 1-33 and 1-32; stumps and slash; no invasives
+1 32,1_32,42.31723 N,72.37763 W,12,south,13-Jun,no,yes,"MP, DS, GS, ABP","No invasives, recent timber harvest"
+1 33,1_33,42.31630 N,72.37682 W,8,east,13-Jun,no,yes,"GS, ABP, MP, DS","recentely cut/harvested, no invasives"
+1 34,1_34,42.31649 N,72.30206 W,12,east,8-Jun,no,no,"ABP, GS, MP, CM","evidence of EAB, near small stream"
+1 38,1_38,42.31954 N,72.38245 W,8,south,8-Jun,no,yes,"ABP, GS, MP, CM","Timber harvest site, lots of slash on ground recent; no invasives"
+1 40,1_40,42.317821 N,72.388708 W,2,northeast,13-Jul,no,no,"GS, CM, IC",
+1 41,1_41,42.317806 N,72.389211 W,2,west,13-Jul,no,no,"GS, CM, IC",
+1 45,1_45,42.320462 N,72.370709 W,18,northeast,22-Jul,no,no,"GS, MP, DS",
+1 46,1_46,42.318523 N,72.370668 W,16,east,22-Jul,no,yes,"DS, GS, MP",Stumps and ferns
+1 47,1_47,42.314804 N,72.370577 W,2,north,22-Jul,no,yes,"MP, GS, DS",LAST PLOT!
+1 50,1_50,42.315993 N,72.388249 W,4,east,13-Jul,no,no,"GM, CM, IC",
+1 51,1_51,42.315327 N,72.385113 W,6,northeast,13-Jul,no,no,"GS, CM, IC",
+1 52,1_52,42.315752 N,72.389935 W,1,east,13-Jul,no,yes,"CM, GS, IC",saw biggest moose poop ive ever seen - char
+1 54,1_54,42.315357 N,72.392257 W,8,west,13-Jul,no,no,"GS, CM, IC",
+1 56,1_56,42.3133396 N,72.389768 W,,flat,13-Jul,no,no,"CM, GS, IC",
+1 65,1_65,42.31143 N,72.37720 W,8,south,29-Jun,no,yes,"MP, DS, GS",Chestnut oak saplings by CO in plot
+1 67,1_67,42.30996 N,72.38018 W,16,east,8-Jun,no,no,"MP, CM, ABP, GS",no invasives
+1 69,1_69,42.30851 N,72.37794 W,10,southeast,29-Jun,no,yes,"MP, GS, DS",
+1 71,1_71,42.31425 N,72.37496 W,3,southeast,29-Jun,no,yes,"GS, MP, DS",
+1 72,1_72,42.31376 N,72.37510 W,3,east,29-Jun,no,yes,"GS, MP, DS",Lots of skinny trees with several lage stumps; no trees
+1 73,1_73,42.31369 N,72.37472 W,2,east,29-Jun,no,yes,"MP, DS, GS",
+1 75,1_75,42.31328 N,72.37717 W,8,east,29-Jun,no,yes,"GS, DS, MP",Lots of dead branches on ground
+1 80,1_80,42.31174 N,72.38103 W,11,east,8-Jun,no,no,"ABP, GS, MP, CM",
+1 83,1_83,42.30988 N,72.38133 W,11,east,8-Jun,no,no,"ABP, GS, MP, CM",Lots of mountain laurel - pretty! HW oak/maple canopy; no invasives
+1 89,1_89,42.31181 N,72.37586 W,5,east,29-Jun,no,yes,"GS, MP, DS",stone wall runs through plot
+1 90,1_90,42.31112 N,72.37592 W,8,southeast,29-Jun,no,yes,"GS, MP, DS",potentially birch planted in rows in the recent timber harvest area in the plot
+1 95,1_95,42.30881 N,72. 37491 W,6,east,29-Jun,yes,no,"GS, MP, DS","Very open field, relatively young (short) pines/trees, no sign of harvest (stumps)"
+1 97,1_97,42.30821 N,72.38407 W,8,west,8-Jun,no,no,"ABP, GS, MP, CM","fallen oak near plot center > 50 cm, no invasive plants"
+1 98,1_98,42.30972 N,72.37284 W,10,northeast,29-Jun,no,no,"GS, MP, DS",steeper slope north a little further away from plot center
+2 05,2_05,42.39137 N,72.38483 W,16,east,15-Jul,no,no,"GS, DS, CL",
+2 07,2_07,42.39124 N,72.38563 W,8,east,13-Jul,no,no,"GS, DS, CL",
+2 08,2_08,42.39117 N,72.38520 W,10,east,15-Jul,no,no,"GS, DS, CL",rocky area
+2 15,2_15,42.38982 N,72.39142 W,2,Southeast,15-Jul,no,no,"GS, DS, CL","creek runs through plot, past timber harvest with mossy stumps"
+2 16,2_16,42.38950 N,72.39266 W,3,south,15-Jul,no,no,"GS, DS, CL","plot at edge is on top of slope and below slope is creek, past timber harvest "
+2 23,2_23,42.39021 N,72.39053 W,4,west,15-Jul,no,no,"GS, DS, CL",
+2 24,2_24,42.39021 N,72.39053 W,2,east,15-Jul,no,no,"GS, DS, CL",Past timber harvest mossy stumps
+2 31,2_31,41.388321 N,72.389290 W,2,north,20-Jul,no,no,"GS, MP, SF",By dried up creek thats rocky
+2 38,2_38,42.387654 N,72.382712 W,2,Northeast,20-Jul,no,no,"GS, MP, SF",
+2 39,2_39,42.387439 N,72.382729 W,1,northeast,20-Jul,no,no,"GS, MP, SF",
+2 40,2_40,42.386874 N,72.382983 W,10,northeast,20-Jul,no,no,"MP, GS, SF",
+2 41,2_41,42.386877 N,72.384495 W,2,east,20-Jul,no,no,"GS, SF, MP",
+2 47,2_47,42.385453 N,72.387258 W,2,east,20-Jul,no,no,"GS, MP, SF",
+2 49,2_49,42.38575 N,72.37862 W,4,northeast,15-Jul,no,no,"GS, DS, CL",
+2 50,2_50,42.38530 N,72.37748 W,5,east,15-Jul,no,no,"GS, DS, CL",
+3 00,3_00,42.37742 N,72.34236 W,8,east,7-Jun,no,no,"MO, DS, MP GS","Thick understory might be limiting ground growth, assumed no invasives"
+3 04,3_04,42.37557 N,72.33245 W,6,east,15-Jun,yes,no,"GS, MP, DS, CM",Barberry nearby
+3 14,3_14,42.369806 N,72.329893 W,10,east,7-Jul,no,no,"MP, DS, GS","all dbh's in inches, barbed wire"
+3 15,3_15,42.36971 N,72.132948 W,5,southeast,7-Jul,no,no,"DS, GS, MP",
+3 16,3_16,42.37496 N,72.33077 W,5,east,15-Jun,no,yes,"GS, MP, DS, CM",stumps present would have been included if still standing tress 
+3 17,3_17,42.37445 N,72.33096 W,3,west,15-Jun,no,yes,"GS, MP, DS, CM",
+3 19,3_19,42.37395 N,72.32964 W,4,south,15-Jun,no,no,"GS, MP, DS, CM",
+3 20,3_20,42.37431 N,72.33328 W,10,South,15-Jun,no,no,"GS, MP, DS, CM","several dead standing oaks, lots of young oaks throughout plot, very sunny area with no ferns, some maple sprouts, on slope very sunny area with shaded forest below"
+3 21,3_21,42.37438 N,72.33471 W,9,south,15-Jun,no,yes,"MP, DS CM, GS",Stumps
+3 22,3_22,42.37395 N,72.33415 W,5,northeast,15-Jun,no,no,"DS, GS, MP, CM",
+3 25,3_25,42.373433 N,72.346412 W,4,west,14-Jul,no,no,"SF, GS, ABP",
+3 27,3_27,42.375710 N,072.3470 W,2,west,7-Jun,no,no,"MP, MO, GS, DS",assumed no invasives
+3 28,3_28,42.37500 N,72.34158 W,2,east,7-Jun,no,no,"MP, MO, GS, DS",assumed no invasives and timber harvest
+3 29,3_29,42.37429 N,72.34239 W,6,southeast,7-Jun,no,no,"MP, MO, GS, DS",assumed no invasives
+3 30,3_30,42.37437 N,72.34422 W,3,southeast,7-Jun,no,no,"MO, DS, MP GS",assumed no invasives
+3 32,3_32,42.37168 N,72.34092 W,2,northwest,7-Jun,no,no,"MP, MO, GS, DS",assumed no invasives and timber harvest
+3 35,3_35,42.37640 N,72.34048 W,8,east,7-Jun,no,no,"MO, GS, DS, MP",assumed no invasives
+3 39,3_39,42.37294 N,72.33034 W,6,north,15-Jun,no,no,"DS, GS, CM, MP",
+3 49,3_49,42.372657 N,72.348195 W,4,southwest,14-Jul,no,no,"GS, SF, ABP",giant rocks in plot with tree growing on top
+3 54,3_54,42.37127 N,72.34230 W,5,west,7-Jun,no,no,"DS, GS, MP, MO",assumed no invasives
+3 55,3_55,42.37080 N,072.3451 W,4,East,7-Jun,no,no,"MP, MO, GS, DS",assumed no invasives
+3 60,3_60,42.37011 N,72.34002 W,2,north,7-Jun,no,no,"MP, MO, GS, DS","Heavy winds damage noted by many fallen trees, assumed no invasives"
+3 62,3_62,42.367113 N,72.343690 W,4,west,13-Jul,no,no,"GS, SF, ABP",
+3 63,3_63,42.366752 N,72.344581 W,2,northwest,14-Jul,no,no,"GS, ABP, SF","Evidence of past timber harvest with mossy stumps, sprig of bittersweet, twinged ivony mous"
+3 71,3_71,42.36752 N,72.34846 W,5,west,14-Jul,no,no,"ABP, SF, GS",Stonewall nearby
+3 73,3_73,42.370961 N,72.346574 W,8,west,14-Jul,yes,no,"ABP, SF, GS",Barberry
+3 74,3_74,42.370242 N,72.345629 W,2,west,14-Jul,no,no,"ABP, SF, GS",
+3 75,3_75,42.36718 N,72.33559 W,1,west,1-Jul,no,no,"DS, GS, MP",
+3 77,3_77,42.36713 N,72.33610 W,7,west,1-Jul,no,yes,"GS, MP, DS","West side of plot is swamp/creek; barberry by swamp, but not in plot"
+3 78,3_78,42.36652 N,72.33629 W,3,west,7-Jun,yes,yes,"DS, GS, MP",dried up stream on western part of plot
+3 79,3_79,42.36674 N,72.33765 W,2,southeast,1-Jul,no,yes,"DS, GS, MP",
+3 80,3_80,42.36583 N,72.33555 W,1,west,1-Jul,yes,no,"MP, DS, GS","buckthorn, sparse"
+3 83,3_83,42.366544 N,72.327244 W,6,east,7-Jul,no,no,"MP, GS, DS",
+3 85,3_85,,,7,east,7-Jul,no,no,"GS, MP, DS",
+3 88,3_88,42.367201 N,72.329285 W,4,east,7-Jul,yes,no,"GS, MP, DS",Barberry
+3 96,3_96,42.36164 N,72.34063 W,2,west,1-Jul,no,no,"GS, MP, DS",trees all have blue spray paint lines on them
+3 97,3_97,42.36390 N,72.33532 W,3,west,1-Jul,no,yes,"GS, MP, DS",in open large clearing field of blueberry
+3 99,3_99,42.36225 N,72.33192 W,2,south,1-Jul,no,yes,"DS, GS, MP",barbed wire; evidence of previous human occupation?
+4 12,4_12,42.42226 N,72.32146 W,6,east,10-Jun,no,yes,"DS, GS, MP",assumed no timber harvest
+4 13,4_13,42.42181 N,72.32053 W,7,east,10-Jun,no,no,"DS, GS, MP",assumed no timber harvest
+4 16,4_16,42.42211 N,72.33250 W,4,southeast,24-Jun,yes,no,"GS, MP, DS",Barberry
+4 17,4_17,42.42157 N,72.33272 W,6,southeast,24-Jun,yes,no,"GS, MP, DS",norway spruce sapling about 8 feet tall
+4 25,4_25,42.41995 N,72.33478 W,9,northeast,24-Jun,yes,no,"GS, MP, DS",Barberry
+4 26,4_26,42.41977 N,72.33538 W,3,east,24-Jun,no,no,"GS, MP, DS",
+4 27,4_27,42.422171 N,72.327181 W,4,west,19-Jul,no,no,"GS, MP. DS",
+4 31,4_31,42.421725 N,72.327763 W,4,northwest,19-Jul,no,no,"GS, DS, MP",
+4 33,4_33,42.420855 N,72.327293 W,4,south,19-Jul,no,no,"MP, DS, GS",
+4 35,4_35,42.42014 N,72.32008 W,3,South,10-Jun,no,yes,"DS, GS, MP",assumed no timber harvest
+4 37,4_37,42.42056 N,72.32284 W,8,east,10-Jun,no,no,"DS, GS, MP",assumed no timber harvest
+4 39,4_39,42.41934 N,72.31912 W,3,north,10-Jun,no,no,"DS, GS, MP","Metal ring on ground, assumed no timber harvest"
+4 40,4_40,42.41930 N,72.32313 W,6,East,10-Jun,no,yes,"DS, GS, MP",assumed no timber harvest
+4 43,4_43,42.418544 N,72.328464 W,4,west,19-Jul,no,no,"GS, MP, DS",
+4 44,4_44,42.418462 N,72.32083 W,2,west,19-Jul,no,no,"DS, GS, MP",
+4 53,4_53,42.41465 N ,72.33181 W,4,East,24-Jun,yes,no,"DS, GS, MP",barberry
+4 56,4_56,42.41609 N,72.32102 W,2,southeast,10-Jun,no,yes,"DS, GS, MP",assumed no timber harvest
+4 57,4_57,42.41570 N,72.31920 W,5,East,10-Jun,no,yes,"DS, GS, MP",
+4 60,4_60,42.416806 N,72.327966 W,1,east,19-Jul,no,no,"MP, DS, GS","Tape marked ""Timber Harvest""; Timber Harvest likely happened long ago; not recent"
+4 62,4_62,42.314499 N,72.323889 W,6,East,19-Jul,no,yes,"DS, GS, MP",
+4 63,4_63,42.416007 N,72.327835 W,16,east,19-Jul,no,no,"MP, GS, DS",
+4 64,4_64,42.415145 N,72.324925 W,9,east,19-Jul,no,yes,"MP, GS, DS",
+4 67,4_67,42.41482 N,72.326349 W,16,East,19-Jul,yes,no,"DS, GS, MP",Single multiflora rose in plot 
+4 68,4_68,42.41362 N,72.31960 W,2,East,10-Jun,no,yes,"DS, GS, MP",some stumps in plot
+4 72,4_72,42.41346 N,72.32037 W,2,south,10-Jun,no,yes,"DS, GS, MP",
+4 74,4_74,42.41429 N,72.33076 W,6,west,24-Jun,yes,no,"GS, DS, MP",Barberry
+4 76,4_76,42.41245 N,72.32928 W,5,west,24-Jun,no,no,"MP, DS, GS",
+4 77,4_77,42.4154 N,72.33807 W,0.5,north,1-Jun,yes,no,"GS, ABP, MP, DS",
+4 85,4_85,42.41269 N,072.335710 W,8,west,1-Jun,yes,no,"ABP, MP, GS, DS","lots of barberries, vegetation follows slope"
+4 87,4_87,42.41241 N,72.33282 W,2,east,1-Jun,no,no,"MP, ABP, GS, DS",assumed no invasives
+4 90,4_90,42.41346 N,72.33099 W,16,west,24-Jun,yes,no,"GS, MP, DS",creek in middle of plot; slopes towards creek; barberry
+4 93,4_93,42.40935 N,72.32528 W,12,east,1-Jun,no,yes,"ABP, DS, MP, GS","Timber harvest since 2017, lots of stumps, at least 2 RO stumpts would have been in, assumed no invasives"
+4 96,4_96,42.41033 N,72.3346 W,8,east,1-Jun,yes,no,"ABP, MP, DS, GS",lots of barberry; small seep in plot
+4 97,4_97,42.40997 N,72.33569 W,8,northeast,1-Jun,yes,no,"MP, GS, ABP, DS","lots of barberry, assumed no timber harvest"
+5 00,5_00,42.354679 N,72.273985 W,0,flat,22-Jul,no,no,"DS, GS, MP",past timber harvest with mossy stumps
+5 06,5_06,42.353361 N,72.2741630 W,2,west,22-Jul,yes,no,"GS, MP, DS","Barberry, past timber harvest with mossy stumps"
+5 07,5_07,42.35413 N,72.27141 W,2,west,21-Jun,no,no,"MP, MO, GS, DS",
+5 09,5_09,42.35365 N,72.27152 W,1,west,21-Jun,no,no,"MP, MO, GS, DS",
+5 10,5_10,42.35312 N,72.27177 W,0,flat,21-Jun,no,no,"MP, MO, GS, DS",trees are mixed
+5 12,5_12,42.35325 N,72.27128 W,0,flat,21-Jun,no,no,"MP, MO, GS, DS",
+5 15,5_15,42.35139 N,72.27573 W,1,north,21-Jun,yes,no,"DS, GS, MO, MP",bird's nest (yellow rumped warbler)
+5 20,5_20,42.35189 N,72.27924 W,35,west,6-Jul,no,no,"GS, MP, TP",
+5 24,5_24,42.34898 N,72.27517 W,1,west,21-Jun,yes,no,"MP, MO, GS, DS","barberry, bittersweet"
+5 26,5_26,42.34733 N,72.27493 W,3,west,21-Jun,no,no,"MO, GS, DS, MD",
+5 27,5_27,42.34637 N,72.27493 W,2,west,21-Jun,yes,no,"MO, GS, DS, MD",
+5 30,5_30,42.347855 N,72.281585 W,13,west,22-Jul,no,no,"MP, DS, GS",Past timber harvest with mossy stumps
+5 32,5_32,42.35205 N,72.28252 W,8,west,6-Jul,no,no,"GS, TP, MP",Sloped towards water of quabbin
+5 38,5_38,42.34606 N,72.26328 W,6,northeast,3-Jun,no,no,"MO, GS, DS, MD",assumed no invasives
+5 54,5_54,42.345068 N,72.277234 W,6,southwest,2-Jun,no,no,"DS, GS, MP",assumed no invasives
+5 55,5_55,42.34463 N,72.27662 W,2,north,2-Jun,no,no,"MP, GS, DS",assumed no invasives
+5 56,5_56,42.34324 N,72.27633 W,2,west,2-Jun,no,no,"DS, GS, MP",assumed no invasives and timber harvest
+5 58,5_58,,,gentle,west,26-May,no,no,"ABP, DS, MO, GS, MP",assumed no invasives and timber harvest
+5 59,5_59,,,4,east,8-Jul,no,no,"GS, MP, DS",
+5 64,5_64,42.34243 N ,072.269899 W,4,south,3-Jun,no,no,"MP, GS, DS, MO","gall wasps on white oak saplings, assumed no invasives"
+5 65,5_65,42.34232 N,072.26943 W,4,west,3-Jun,no,no,"MP, GS, DS, MO",assumed no invasives
+5 75,5_75,,,2,west,8-Jul,yes,no,"GS, MP, DS","Between road and stream, multi rose and barberry"
+5 77,5_77,42.343741 N,72.282209 W,8,norwest,8-Jul,no,no,"MP, DS, GS",
+5 81,5_81,42.34145 N,72. 26411,3,west,3-Jun,no,no,"GS, MO, DS, MP","fire scaring on local trees following aspect, assumed no invasives"
+5 85,5_85,42.34005 N,72.26536 W,4,west,3-Jun,no,no,"MP, GS, DS, MO",assumed no invasives and timber harvest
+5 86,5_86,42.33958 N,072.268100 W,2,northwest,2-Jun,no,no,"DS, GS, MP",assumed no invasives and timber harvest
+5 87,5_87,42.340901 N,72.282126 W,4,west,8-Jul,yes,no,"GS, MP, DS","Multiflora rose, barberry"
+5 88,5_88,,,1,west,8-Jul,yes,no,"GS, MP, DS",barberry
+5 90,5_90,42.338798 N,72.280979 W,1,west,8-Jul,no,no,"DS, MP, GS",
+5 91 ,5_91 ,42.338014 N,72.278167 W,15,west,8-Jul,no,no,"DS, GS, ABP, MP, SB","Rocky, forgot to note sprouts on the oaks"
+5 92,5_92,42.337749 N,72.276747 W,5,east,8-Jul,no,no,"DS, GS, ABP, MP, SB",
+5 97,5_97,42.340614 N,72.282686 W,6,west,8-Jul,no,no,"DS, GS, MP","timber harvest in far part, cold decayed stumpts"
+5 98,5_98,42.33841 N,072.26698 W,1,West,3-Jun,no,no,"MO, GS, DS, MD",assumed no invasives
+6 01,6_01,42.43383 N,72.23645 W,7,northeast,22-Jun,no,yes,"CM, GS, MP",close to road
+6 03,6_03,42.43634 N,72.24239 W,1,north,5-Jul,no,no,"MP, DS, GS",
+6 04,6_04,42.43611 N,72.24168 W,0,West,5-Jul,yes,no,"DS. GS, MP",barberry
+6 05,6_05,42.43621 N,72.24364 W,2,west,5-Jul,no,no,"GS, MP, DS",
+6 08,6_08,42.43394 N,72.23177 W,flat,north,5-Jul,no,yes,"GS, MP, DS",
+6 11,6_11,42.43192 N,72.24899 W,1,west,5-Jul,no,no,"MP, GS, DS",Thick understory; some trees that are possibly in the plot could not be seen by cruz-all
+6 12,6_12,42.43145 N,72.23272 W,,,22-Jun,no,yes,"CM, GS, MP",
+6 13,6_13,42.43076 N,72.233612 W,4,Southwest,22-Jun,no,yes,"CM, GS, MP",
+6 19,6_19,42.42854 N,72.23193 W,2,east,28-Jun,no,no,"GS, MP, DS, CM",
+6 23,6_23,42.43239 N,72.23631 W,6,south,22-Jun,no,no,"CM, GS, MP",in small clearing
+6 24,6_24,42.43322 N,72.24232 W,1,north,5-Jul,no,yes,"MP, DS, GS",
+6 28,6_28,42.43236 N,72.24375 W,6,west,5-Jul,no,no,"DS, GS, MP",
+6 29,6_29,42.43077 N,72.23529 W,6,south,22-Jun,no,yes,"CM, GS, MP",
+6 33,6_33,42.429840 N,72.23856 W,gentle,south,27-May,no,yes,"ABP, DS, GS, MP",assumed no invasives
+6 35,6_35,42.43199 N,72.23430 W,2,west,22-Jun,no,yes,"CM, GS, MP",
+6 37,6_37,42.43359 N,72.24710 W,3,north,5-Jul,no,no,"GS, MP, DS",
+6 42,6_42,42.43026  N,72.25018 W,5,north,5-Jul,no,no,"GS, MP, DS",
+6 46,6_46,42.42814 N,72.23410 W,1,east,28-Jun,no,no,"CM, GS, DS, MP",1/2 hemlock stand
+6 47,6_47,42.42723 N,72.23343 W,14,east,28-Jun,yes,no,"MP, GS, CM, DM",slope goes towards dried up creek; barberry
+6 50,6_50,42.424739 N,72.235437 W,0,flat,27-May,yes,no,"ABP, DS, GS, MP",assumed no timber harvest
+6 53,6_53,,,,,19-May,no,no,"DS, CM, ABP","center next to stone wall, assumed no invasives"
+6 56,6_56,42.42661 N,72.23810 W,gentle,south,27-May,no,no,"ABP, DS, GS, MP",assumed no invasives
+6 59,6_59,42.42605 N,72.23994 W,3,south,17-Jun,yes,no,"DS, GS, MP",By creek/stream; aspect towards road
+6 60,6_60,,,gentle,south,27-May,yes,no,"GS, ABP, MP, DS",right by road past human activity invasives rock walls
+6 65,6_65,42.43053 N,72.24829 W,3,west,5-Jul,yes,no,"GS, DS, MP",Barberry
+6 66,6_66,42.42877 N,72.24837 W,1,west,17-Jun,yes,no,"GS, DS, MP",
+6 67,6_67,42.42767 N,72.24319 W,9,southwest,17-Jun,no,no,"DS, MP, GS",
+6 68,6_68,42.42813 N,72.24908 W,1,northeast,17-Jun,no,no,"MP, GS, DS",
+6 69,6_69,42.42744 N,72.24542 W,4,south,17-Jun,no,no,"GS, DS, MP","lots of weirdly shaped trees, lots of rocks in area"
+6 70,6_70,42.42699 N,72.24487 W,5,east,17-Jun,no,no,"GS, MP, DS",
+6 72,6_72,42.427103 N,72.247887 W,2,north,21-Jul,no,no,"DS, MP, CM, GS",
+6 77,6_77,42.42518 N,72.24135 W,1,southwest,17-Jun,yes,no,"MP, GS, DS",Downslope after stone wall (SW 9 degrees slope); barberry
+6 78,6_78,42.425189 N,72.245378 W,6,east,21-Jun,no,no,"MP, DS, GS, CM",
+6 81,6_81,42.42369 N,72.23858 W,2,south,17-Jun,yes,no,"DS, GS, MP","barberry, bittersweet"
+6 82,6_82,42.424574 N,72.243447 W,4,northeast,21-Jul,yes,no,"GS, MP, DS, CM",barberry. by creek
+6 84,6_84,42.422184 N,72.244295 W,16,southeast,21-Jul,no,no,"CM, MP, GS, DS",
+6 85,6_85,42.42782 N,72.25335 W,1,north,28-Jun,yes,no,"GS, DS, MP, CM",Barberry
+6 88,6_88,42.424267 N,72.250366 W,3,NE,21-Jul,no,no,"CM, GS, MP, DS","Very little ground cover, lots of thin black birch saplings, lots of fallen young pine"
+6 89,6_89,42.420989 N,72.242048 W,4,northeast,21-Jul,yes,no,"GS, MP, DS, CM","Barberry, Glossy buckthorn"
+6 90,6_90,42.420156 N,72.40545 W,2,SE,21-Jul,yes,no,"DS, GS, MP, CM",Barberry
+6 91,6_91,42.420462 N,72.241426 W,2,southwest,21-Jul,yes,no,"MP, DS, GS, CM",Barberry
+6 92,6_92,42.422582 N,72.250580 W,1,west,21-Jul,no,no,"GS, MP, DS, CM",
+6 93,6_93,42.420891 N,72.246277 W,4,east,21-Jul,no,no,"DS, MP, CM, GS",
+6 96,6_96,42.420872 N,72.250094 W,1,southwest ,21-Jul,no,no,"MP. GS, DS, CM",
