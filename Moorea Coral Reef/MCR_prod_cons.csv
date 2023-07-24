@@ -1,4 +1,4 @@
-"","Year","Site","Habitat","Coarse_Trophic","Average_Herbivore_Biomass","Macroalgae","Turf Algae","Non-algae","Cyclone_Disturbance"
+"","Year","Site","Habitat","Coarse_Trophic","Average_Herbivore_Biomass","Macroalgae_Percent_Cover","Turf_Algae_Percent_Cover","Non-algae_Percent_Cover","Cyclone_Disturbance"
 "1",2007,"1","BA","Primary Consumer",0,3.76,51.04,45.2,"pre"
 "2",2007,"1","FO","Primary Consumer",1.36936,14.32,44,41.68,"pre"
 "3",2007,"1","FR","Primary Consumer",0,2.72,45.04,52.24,"pre"
