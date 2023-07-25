@@ -1,69 +1,69 @@
-group,species
-cladoceran,CHYDORUS
-cladoceran,BOSMINIDAE
-cladoceran,CERIODAPHNIA
-cladoceran,DAPHNIA
-cladoceran,DAPHNIA LONGIREMIS
-cladoceran,DAPHNIA MENDOTAE
-cladoceran,DAPHNIA PARVULA
-cladoceran,DAPHNIA PULICARIA
-cladoceran,DAPHNIA RETROCURVA
-cladoceran,HOLOPEDIUM GIBBERUM
-cyclopoid,ACANTHOCYCLOPS VERNALIS
-calanoid,CALANOID
-copepod,COPEPOD NAUPLII
-cyclopoid,CYCLOPOID
-cyclopoid,DIACYCLOPS THOMASI
-calanoid,EPISCHURA LACUSTRIS
-cyclopoid,EUCYCLOPS ELEGANS
-calanoid,LEPTODIAPTOMUS MINUTUS
-calanoid,LEPTODIAPTOMUS SICILIS
-cyclopoid,MESOCYCLOPS EDAX
-calanoid,SKISTODIAPTOMUS OREGONENSIS
-cyclopoid,TROPOCYCLOPS PRASINUS MEXICANUS
-rotifer,ASCOMORPHA
-rotifer,ASCOMORPHA ECAUDIS
-rotifer,ASCOMORPHA OVALIS
-rotifer,ASPLANCHNA
-rotifer,COLLOTHECA
-rotifer,CONOCHILOIDES
-rotifer,CONOCHILUS
-rotifer,FILINIA TERMINALIS
-rotifer,GASTROPUS HYPTOPUS
-rotifer,GASTROPUS STYLIFER
-rotifer,KELLICOTTIA BOSTONIENSIS
-rotifer,KELLICOTTIA LONGISPINA
-rotifer,KERATELLA COCHLEARIS
-rotifer,KERATELLA CRASSA
-rotifer,KERATELLA EARLINAE
-rotifer,KERATELLA HIEMALIS
-rotifer,KERATELLA QUADRATA
-rotifer,KERATELLA SERRULATA
-rotifer,KERATELLA TAUROCEPHALA
-rotifer,KERATELLA TICINENSIS
-rotifer,LECANE INERMIS
-rotifer,LECANE TENUISETA
-rotifer,LEPADELLA
-rotifer,LEPADELLA PATELLA
-rotifer,MONOSTYLA
-rotifer,MONOSTYLA LUNARIS
-rotifer,NOTHOLCA FOLIACEA
-rotifer,NOTHOLCA MICHIGANENSIS
-rotifer,PLOESOMA
-rotifer,POLYARTHRA
-rotifer,POLYARTHRA DOLICHOPTERA
-rotifer,POLYARTHRA EURYPTERA
-rotifer,POLYARTHRA MAJOR
-rotifer,POLYARTHRA REMATA
-rotifer,POLYARTHRA VULGARIS
-rotifer,SYNCHAETA
-rotifer,TRICHOCERCA
-rotifer,TRICHOCERCA BIROSTRIS
-rotifer,TRICHOCERCA CYLINDRICA
-rotifer,TRICHOCERCA MULTICRINIS
-rotifer,TRICHOCERCA PORCELLUS
-rotifer,TRICHOCERCA PUSILLA
-rotifer,TRICHOCERCA ROUSSELETI
-rotifer,TRICHOCERCA SIMILIS
-rotifer,UNKNOWN ROTIFER
-cladoceran,DIAPHANOSOMA BIRGEI
+group,species,biomass_taxa
+cladoceran,CHYDORUS,chydorus
+cladoceran,BOSMINIDAE,bosmina
+cladoceran,CERIODAPHNIA,ceriodaphnia
+cladoceran,DAPHNIA,daphnia
+cladoceran,DAPHNIA LONGIREMIS,daphnia
+cladoceran,DAPHNIA MENDOTAE,daphnia
+cladoceran,DAPHNIA PARVULA,daphnia
+cladoceran,DAPHNIA PULICARIA,daphnia
+cladoceran,DAPHNIA RETROCURVA,daphnia
+cladoceran,HOLOPEDIUM GIBBERUM,daphnia
+cyclopoid,ACANTHOCYCLOPS VERNALIS,cylopoid
+calanoid,CALANOID,calanoid
+copepod,COPEPOD NAUPLII,nauplii
+cyclopoid,CYCLOPOID,cyclopoid
+cyclopoid,DIACYCLOPS THOMASI,cyclopoid
+calanoid,EPISCHURA LACUSTRIS,calanoid
+cyclopoid,EUCYCLOPS ELEGANS,cyclopoid
+calanoid,LEPTODIAPTOMUS MINUTUS,calanoid
+calanoid,LEPTODIAPTOMUS SICILIS,calanoid
+cyclopoid,MESOCYCLOPS EDAX,cyclopoid
+calanoid,SKISTODIAPTOMUS OREGONENSIS,calanoid
+cyclopoid,TROPOCYCLOPS PRASINUS MEXICANUS,cyclopoid
+rotifer,ASCOMORPHA,ascomorpha
+rotifer,ASCOMORPHA ECAUDIS,ascomorpha
+rotifer,ASCOMORPHA OVALIS,ascomorpha
+rotifer,ASPLANCHNA,asplanchna
+rotifer,COLLOTHECA,conochilus
+rotifer,CONOCHILOIDES,conochilus
+rotifer,CONOCHILUS,conochilus
+rotifer,FILINIA TERMINALIS,filinia
+rotifer,GASTROPUS HYPTOPUS,gastropus
+rotifer,GASTROPUS STYLIFER,gastropus
+rotifer,KELLICOTTIA BOSTONIENSIS,kellicottia
+rotifer,KELLICOTTIA LONGISPINA,kellicottia
+rotifer,KERATELLA COCHLEARIS,keratella cochlearis
+rotifer,KERATELLA CRASSA,keratella cochlearis
+rotifer,KERATELLA EARLINAE,keratella cochlearis
+rotifer,KERATELLA HIEMALIS,Keratella quadrata
+rotifer,KERATELLA QUADRATA,Keratella quadrata
+rotifer,KERATELLA SERRULATA,Keratella quadrata
+rotifer,KERATELLA TAUROCEPHALA,keratella cochlearis
+rotifer,KERATELLA TICINENSIS,keratella cochlearis
+rotifer,LECANE INERMIS,lecane
+rotifer,LECANE TENUISETA,lecane
+rotifer,LEPADELLA,polyarthra
+rotifer,LEPADELLA PATELLA,polyarthra
+rotifer,MONOSTYLA,monostyla
+rotifer,MONOSTYLA LUNARIS,monostyla
+rotifer,NOTHOLCA FOLIACEA,notholca
+rotifer,NOTHOLCA MICHIGANENSIS,notholca
+rotifer,PLOESOMA,gastropus
+rotifer,POLYARTHRA,polyarthra
+rotifer,POLYARTHRA DOLICHOPTERA,polyarthra
+rotifer,POLYARTHRA EURYPTERA,polyarthra
+rotifer,POLYARTHRA MAJOR,polyarthra
+rotifer,POLYARTHRA REMATA,polyarthra
+rotifer,POLYARTHRA VULGARIS,polyarthra
+rotifer,SYNCHAETA,synchaeta
+rotifer,TRICHOCERCA,trichocerca
+rotifer,TRICHOCERCA BIROSTRIS,trichocerca
+rotifer,TRICHOCERCA CYLINDRICA,trichocerca
+rotifer,TRICHOCERCA MULTICRINIS,trichocerca
+rotifer,TRICHOCERCA PORCELLUS,trichocerca
+rotifer,TRICHOCERCA PUSILLA,trichocerca
+rotifer,TRICHOCERCA ROUSSELETI,trichocerca
+rotifer,TRICHOCERCA SIMILIS,trichocerca
+rotifer,UNKNOWN ROTIFER,keratella cochlearis
+cladoceran,DIAPHANOSOMA BIRGEI,daphnia

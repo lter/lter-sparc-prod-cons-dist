@@ -152,7 +152,7 @@ trout_zoops = zoops %>%
   select(-lakeid, -station, -species_code) %>%
   mutate(month = month(sample_date)) %>%
   # Filter to ice-free season
-  filter(month>=4) %>%
+  filter(month>=5) %>%
   filter(month<=10)
 
 #create a file of all species to assign to taxonomic groups
@@ -165,24 +165,58 @@ groups = read.csv("Trout Zoop Species.csv") %>%
 #Merge the two data frames
 trout_zoops = left_join(trout_zoops, groups, by = c("species_name"))
 
-# Calculate total zooplankton density by group for each sampling date
-# Will want to go back and make this biomass, but that's next week's problem
-total_zoops = trout_zoops %>%
-  group_by(year4, sample_date, group) %>%
-  summarize(tot_zoops = sum(density, na.rm = TRUE)) %>%
+#Filter down to just the Daphnia - might be the only 
+tr_daphnia = trout_zoops %>%
+  filter(group == 'cladoceran') %>%
+  select(-individuals_measured)
+
+# Calculate the mean length by species
+clado_length = tr_daphnia %>%
+  group_by(species_name) %>%
+  summarize(global_spp_length = mean(avg_length, na.rm = TRUE)) %>%
   ungroup()
 
-# Pivot the data frame wide
-zoops_wide = pivot_wider(total_zoops, 
-                        id_cols = c(year4, sample_date), 
-                        names_from = group, 
-                        values_from = c(tot_zoops)) %>%
+# Create a new column with the global mean species length
+tr_daphnia1 = left_join(tr_daphnia, clado_length, by = 'species_name')
+
+# Sometimes they don't measure lengths, so we'll use the average for that species 
+# if a length measurement is missing. Not perfect, but it's what we have...
+# Could try to make it month-specific for lengths later to get a better phenology
+tr_daphnia = tr_daphnia1 %>%
+  mutate(avg_length = case_when(is.na(.$avg_length) ~ global_spp_length, 
+                      TRUE ~ avg_length))
+
+# Now we need to calculate biomass. Get ready for an epic case_when()
+tr_biomass = tr_daphnia %>%
+  mutate(biomass = case_when(
+    .$biomass_taxa == 'bosmina'~ (26.6*(avg_length)^3.13)*density,
+    .$biomass_taxa == 'daphnia'~ ((1.5*10^-8)*(avg_length)^2.84)*density,
+    .$biomass_taxa == 'ceriodaphnia'~ ((1.76*10^-6)*(avg_length)^2.26)*density,
+    .$biomass_taxa == 'chydorus'~ (89.43*(avg_length)^3.03)*density)) %>%
+  # sum all cladoceran biomass by sampling date
+  group_by(year4, sample_date) %>%
+  summarize(cladoceran_biomass = sum(biomass, na.rm = TRUE)) %>%
+  ungroup() %>%
   rename(sampledate = sample_date)
+
+# # Pivot the data frame wide
+# zoops_wide = pivot_wider(total_zoops, 
+#                         id_cols = c(year4, sample_date), 
+#                         names_from = group, 
+#                         values_from = c(tot_zoops)) %>%
+#   rename(sampledate = sample_date)
 
 
 # MERGE THE DATA FRAMES ===================================
-ntl_prod_cons = left_join(chem_chl_merge, zoops_wide,
-                          by = c("sampledate", "year4"))
+ntl_prod_cons = left_join(chem_chl_merge, tr_biomass,
+                          by = c("sampledate", "year4")) %>%
+  mutate(chl_epi = mean(c(chl_surface, chl3, chl5), na.rm = TRUE),
+         tdn_epi = mean(c(totnf_0, totnf_5), na.rm = TRUE),
+         tn_epi = mean(c(totnuf_0, totnuf_5), na.rm = TRUE),
+         tdp_epi = mean(c(totpf_0, totpf_5), na.rm = TRUE),
+         tp_epi = mean(c(totpuf_0, totpuf_5), na.rm = TRUE)) %>%
+  select(-chl3:-totpuf_5)
+
 
 # Create a column for the disturbance event
 ntl_prod_cons$spiny_dist = NA
@@ -191,4 +225,4 @@ ntl_trout = ntl_prod_cons %>%
                                 year4 >= 2014 ~ "post"))
 
 #Save the file
-# write.csv(ntl_trout, file = "NTL_TroutLake_SpinyWaterFlea.csv")
+write.csv(ntl_trout, file = "NTL_TroutLake_SpinyWaterFlea.csv")
