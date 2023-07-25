@@ -1,62 +1,62 @@
-group,species
-cyclopoid,ACANTHOCYCLOPS VERNALIS
-cladoceran,ALONA
-rotifer,ASCOMORPHA
-rotifer,ASCOMORPHA OVALIS
-rotifer,ASPLANCHNA
-cladoceran,BOSMINIDAE
-calanoid,CALANOID
-cladoceran,CHYDORUS
-rotifer,COLLOTHECA
-rotifer,CONOCHILOIDES
-rotifer,CONOCHILUS
-copepod,COPEPOD NAUPLII
-cyclopoid,CYCLOPOID
-cladoceran,DAPHNIA
-cladoceran,DAPHNIA AMBIGUA
-cladoceran,DAPHNIA DUBIA
-cladoceran,DAPHNIA LONGIREMIS
-cladoceran,DAPHNIA MENDOTAE
-cladoceran,DAPHNIA PARVULA
-cladoceran,DAPHNIA PULICARIA
-cyclopoid,DIACYCLOPS THOMASI
-cladoceran,DIAPHANOSOMA BIRGEI
-calanoid,EPISCHURA LACUSTRIS
-cyclopoid,EUCYCLOPS AGILIS
-cyclopoid,EUCYCLOPS ELEGANS
-rotifer,FILINIA TERMINALIS
-rotifer,GASTROPUS HYPTOPUS
-rotifer,GASTROPUS STYLIFER
-cladoceran,HOLOPEDIUM GIBBERUM
-rotifer,KELLICOTTIA BOSTONIENSIS
-rotifer,KELLICOTTIA LONGISPINA
-rotifer,KERATELLA COCHLEARIS
-rotifer,KERATELLA CRASSA
-rotifer,KERATELLA EARLINAE
-rotifer,KERATELLA HIEMALIS
-rotifer,KERATELLA QUADRATA
-rotifer,KERATELLA TAUROCEPHALA
-rotifer,KERATELLA TICINENSIS
-rotifer,LECANE
-rotifer,LECANE INERMIS
-rotifer,LECANE MIRA
-rotifer,LECANE TENUISETA
-calanoid,LEPTODIAPTOMUS MINUTUS
-rotifer,MONOSTYLA
-rotifer,MONOSTYLA LUNARIS
-rotifer,MONOSTYLA OBTUSA
-rotifer,PLOESOMA
-rotifer,PLOESOMA LENTICULARE
-rotifer,POLYARTHRA
-rotifer,POLYARTHRA DOLICHOPTERA
-rotifer,POLYARTHRA EURYPTERA
-rotifer,POLYARTHRA MAJOR
-rotifer,POLYARTHRA REMATA
-rotifer,POLYARTHRA VULGARIS
-rotifer,POLYPHEMUS PEDICULUS
-rotifer,SYNCHAETA
-rotifer,TRICHOCERCA BIROSTRIS
-rotifer,TRICHOCERCA CYLINDRICA
-rotifer,TRICHOCERCA MULTICRINIS
-rotifer,TROPOCYCLOPS PRASINUS MEXICANUS
-rotifer,UNKNOWN ROTIFER
+group,species,biomass_taxa
+cyclopoid,ACANTHOCYCLOPS VERNALIS,cyclopoid
+cladoceran,ALONA,alona
+rotifer,ASCOMORPHA,ascomorpha
+rotifer,ASCOMORPHA OVALIS,ascomorpha
+rotifer,ASPLANCHNA,asplanchna
+cladoceran,BOSMINIDAE,bosmina
+calanoid,CALANOID,calanoid
+cladoceran,CHYDORUS,chydorus
+rotifer,COLLOTHECA,
+rotifer,CONOCHILOIDES,conochilus
+rotifer,CONOCHILUS,conochilus
+copepod,COPEPOD NAUPLII,copepod
+cyclopoid,CYCLOPOID,cyclopoid
+cladoceran,DAPHNIA,daphnia
+cladoceran,DAPHNIA AMBIGUA,cladoceran
+cladoceran,DAPHNIA DUBIA,cladoceran
+cladoceran,DAPHNIA LONGIREMIS,cladoceran
+cladoceran,DAPHNIA MENDOTAE,cladoceran
+cladoceran,DAPHNIA PARVULA,cladoceran
+cladoceran,DAPHNIA PULICARIA,cladoceran
+cyclopoid,DIACYCLOPS THOMASI,cyclopoid
+cladoceran,DIAPHANOSOMA BIRGEI,cladoceran
+calanoid,EPISCHURA LACUSTRIS,calanoid
+cyclopoid,EUCYCLOPS AGILIS,cyclopoid
+cyclopoid,EUCYCLOPS ELEGANS,cyclopoid
+rotifer,FILINIA TERMINALIS,filinia
+rotifer,GASTROPUS HYPTOPUS,gastropus
+rotifer,GASTROPUS STYLIFER,gastropus
+cladoceran,HOLOPEDIUM GIBBERUM,cladoceran
+rotifer,KELLICOTTIA BOSTONIENSIS,kellicottia
+rotifer,KELLICOTTIA LONGISPINA,kellicottia
+rotifer,KERATELLA COCHLEARIS,keratella
+rotifer,KERATELLA CRASSA,keratella
+rotifer,KERATELLA EARLINAE,keratella
+rotifer,KERATELLA HIEMALIS,keratella
+rotifer,KERATELLA QUADRATA,keratella
+rotifer,KERATELLA TAUROCEPHALA,keratella
+rotifer,KERATELLA TICINENSIS,keratella
+rotifer,LECANE,lecane
+rotifer,LECANE INERMIS,lecane
+rotifer,LECANE MIRA,lecane
+rotifer,LECANE TENUISETA,lecane
+calanoid,LEPTODIAPTOMUS MINUTUS,calanoid
+rotifer,MONOSTYLA,monostyla
+rotifer,MONOSTYLA LUNARIS,monostyla
+rotifer,MONOSTYLA OBTUSA,monostyla
+rotifer,PLOESOMA,
+rotifer,PLOESOMA LENTICULARE,
+rotifer,POLYARTHRA,polyarthra
+rotifer,POLYARTHRA DOLICHOPTERA,polyarthra
+rotifer,POLYARTHRA EURYPTERA,polyarthra
+rotifer,POLYARTHRA MAJOR,polyarthra
+rotifer,POLYARTHRA REMATA,polyarthra
+rotifer,POLYARTHRA VULGARIS,polyarthra
+rotifer,POLYPHEMUS PEDICULUS,polyarthra
+rotifer,SYNCHAETA,synchaeta
+rotifer,TRICHOCERCA BIROSTRIS,trichocerca
+rotifer,TRICHOCERCA CYLINDRICA,trichocerca
+rotifer,TRICHOCERCA MULTICRINIS,trichocerca
+rotifer,TROPOCYCLOPS PRASINUS MEXICANUS,
+rotifer,UNKNOWN ROTIFER,

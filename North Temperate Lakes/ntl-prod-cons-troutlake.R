@@ -224,5 +224,7 @@ ntl_trout = ntl_prod_cons %>%
   mutate(spiny_dist = case_when(year4 < 2014 ~ "pre",
                                 year4 >= 2014 ~ "post"))
 
+
+
 #Save the file
-write.csv(ntl_trout, file = "NTL_TroutLake_SpinyWaterFlea.csv")
+# write.csv(ntl_trout, file = "NTL_TroutLake_SpinyWaterFlea.csv")
