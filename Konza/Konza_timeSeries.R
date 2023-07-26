@@ -6,6 +6,7 @@
 
 ### TO DO ###
 # include the spatial variability (plot all transects), instead of annual point
+# add bison and grazed production data
 
 
 library(grid)
