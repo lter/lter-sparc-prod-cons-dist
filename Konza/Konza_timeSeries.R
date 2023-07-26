@@ -83,7 +83,7 @@ plantBiomassFig <- ggplot(data=plantBiomassUngrazed, aes(x=RECYEAR, y=total_biom
            alpha = .2,fill = "blue") +
   geom_point(size=2) +
   geom_line() +
-  xlab('Growing Year') + ylab(expression(paste('Aboveground Net Primary Productivity (g/',  ~ m ^ 2, ')'))) +
+  xlab('Growing Year') + ylab(expression(paste('Aboveground Biomass (g/',  ~ m ^ 2, ')'))) +
   scale_color_manual(values=c('darkorange', 'limegreen', 'purple'),
                      breaks=c("001d", "004b", "020b"),
                      labels=c("Annual Burn", "4 Yr", "20 Yr")) +
