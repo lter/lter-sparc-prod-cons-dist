@@ -55,14 +55,14 @@ no_obs <- data.frame(matrix(data = NA, nrow = nrow(recov), ncol = length(no_obs_
 #add the column names to sort by date during cbind:
 colnames(no_obs) <- c(no_obs_mos)
 #cbind for time series:
-
+full_ts <- cbind(recov, no_obs)[order(c(names(recov),names(no_obs)))]
 
 #x <- 1:length(y)
 # TO DO: NEED TO ADD NON-DATA MONTHS TO TIME SERIES 
 
 sample_site <- data.frame(
-  month = colnames(y),
-  value = y # corrects for scaling in data from GEE product
+  month = colnames(full_ts),
+  value = as.numeric(full_ts/1000) # corrects for scaling in data from GEE product
 )
 colnames(sample_site) <- c("x","value")
 
@@ -70,7 +70,7 @@ colnames(sample_site) <- c("x","value")
 ##turn this stuff on and change name to save:
 #fname = "2023_07_20_Slow_Recov_sample_plot_166.tiff"
 #tiff(fname, units = "in", width=12, height=3, res=300)
-ggplot(data = sample_site, mapping = aes(x = x, y = value)) +
+ggplot(data = sample_site, mapping = aes(x = as.Date(x), y = value)) +
   geom_line(color="forestgreen") +
   geom_point(color="forestgreen") + 
   geom_line(data = filter(sample_site, is.na(value)==FALSE), 
@@ -79,7 +79,7 @@ ggplot(data = sample_site, mapping = aes(x = x, y = value)) +
   labs(title = "Sample Forest Condition: Recovery",
        y="Condition Score", #or TCG - remember to change when making plots
        x="Growing Season Month") +
-  scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
+  #scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
   theme_bw() + theme(panel.border = element_blank(), 
                      panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), 
