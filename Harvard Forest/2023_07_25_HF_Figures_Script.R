@@ -101,8 +101,15 @@ colnames(time_series) <- str_replace_all(names(time_series), c("X"="",
 
 ### VERSION FOR PLOTTING ALL SITES - adding single line for each site: ------------
 # make full time series with missing dummy variables -
-# start with grabbing recov section of time series:
-recov <- time_series[,c(first(grep("^2017-06", colnames(time_series))):ncol(time_series))]
+
+# start with grabbing section of time series that you want to plot:
+# FULL TIME SERIES recov object is just the time_series object (see below)
+# RECOVERY WINDOW: "^2017-06" as disturbance
+# OTHER: can start at any date. From 5-year "steady state" start, use "^2011-04"
+recov <- time_series[,c(first(grep("^2011-04", colnames(time_series))):ncol(time_series))]
+
+#full time series:
+#recov <- time_series
 
 ### Adding dummy data to time series of recovery (for months with no observations)
 # getting all months from beginning to end of recovery:
@@ -128,18 +135,21 @@ pivot_ts$site <- sites
 
 ##GGPLOT VERSION ----------------------
 ##turn this stuff on and change name to save:
-#fname = "2023_07_20_Slow_Recov_sample_plot_166.tiff"
-#tiff(fname, units = "in", width=12, height=3, res=300)
+fname = "Harvard Forest/HFR_Raw_Time_Series_All_Sites_TCG_2023_07_27.tiff"
+tiff(fname, units = "in", width=12, height=4, res=300)
 ggplot(data = pivot_ts, mapping = aes(x = as.Date(name), y = as.numeric(value/1000), 
                                       group = site, color = factor(site))) +
-  geom_line() +
+  geom_line(size=0.5) +
   geom_point() + 
   geom_line(data = filter(pivot_ts, is.na(value)==FALSE), 
             linetype = "dashed", size=0.3) +
-  ylim(c(0, 0.4)) +
-  labs(title = "Post-Defoliation Recovery",
-       y="Forest Condition Score", #or TCG - remember to change when making plots
-       x="Time (Months)") +
+  geom_vline(xintercept = as.Date("2017-06-15"),
+             linetype = "dashed", size=0.5) +
+  ylim(c(0, 0.45)) + #for tcg version
+  labs(#title = "Post-Defoliation Recovery",
+       y="Tasseled Cap Greenness Index Value", #or TCG - remember to change when making plots
+       x="Time (Months)",
+       color = "Site") +
   #scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
   theme_bw() + theme(panel.border = element_blank(), 
                      panel.grid.major = element_blank(),
@@ -147,7 +157,7 @@ ggplot(data = pivot_ts, mapping = aes(x = as.Date(name), y = as.numeric(value/10
                      axis.line = element_line(colour = "black"))
 # theme(panel.grid.major = element_blank(), 
 #       panel.grid.minor = element_blank())
-#dev.off()
+dev.off()
 
 
 
