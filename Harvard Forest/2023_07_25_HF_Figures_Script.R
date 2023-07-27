@@ -37,7 +37,7 @@ tcg <- read.csv(tcg_file)
 # NOTE FOR NICK AND ANGEL: This is for choosing plotting either cs time series or tcg time series
 # When using single site you can select that here:
 #site <- 12 # 12 sites in data collection, pick 1-12
-obs <- tcg  # data observations - tcg or cs file from above - tcg for TCG, cs for condition scores
+obs <- cs  # data observations - tcg or cs file from above - tcg for TCG, cs for condition scores
 
 #get just the tcg values from data frame:
 time_series<-obs[,c(grep("^X",colnames(obs)))]
@@ -146,7 +146,7 @@ ggplot(data = pivot_ts, mapping = aes(x = as.Date(name), y = as.numeric(value/10
             linetype = "dashed", size=0.3) +
   # geom_vline(xintercept = as.Date("2017-06-15"),
   #            linetype = "dashed", size=0.5) +
-  ylim(c(0, 0.45)) + #for tcg version
+  #ylim(c(0, 0.45)) + #for tcg version
   labs(title = "Post-Defoliation Recovery",
        y="Forest Condition Score",
        #y="Tasseled Cap Greenness Index Value", #or TCG - remember to change when making plots
