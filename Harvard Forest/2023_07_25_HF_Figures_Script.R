@@ -4,6 +4,8 @@
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(stringr)
+library(lubridate)
 library(mgcv)
 library(pROC)
 library(ggforce)
@@ -24,14 +26,67 @@ cs <- read.csv(cs_file)
 tcg <- read.csv(tcg_file)
 
 # Harvard Forest data - Landsat time series at some of the sites:
-site <- 2 # 12 sites in data collection, pick 1-12
+site <- 12 # 12 sites in data collection, pick 1-12
 obs <- cs # data observations - tcg or cs file from above - tcg for TCG, cs for condition scores
 
 #get just the tcg values from data frame:
 time_series<-obs[,c(grep("^X",colnames(obs)))]
 
-y <- as.numeric(time_series[site,],) #currently Apr 2011-Aug 2020
-x <- 1:length(y)
+#remove unnecessary parts of colnames to just get dates:
+colnames(time_series) <- str_replace_all(names(time_series), c("X"="", 
+                                                               "_score_mean"="", 
+                                                               "_tcg_mean"="",
+                                                               "\\."="-"))
+
+#y <- as.numeric(time_series[site,31:80]) #currently Apr 2011-Aug 2020
+#y <- recov <- time_series[site,c(first(grep("^2017", colnames(time_series))):ncol(time_series))]
+recov <- time_series[site,c(first(grep("^2017", colnames(time_series))):ncol(time_series))]
+
+### Adding dummy data to time series of recovery (for months with no observations)
+# getting all months from beginning to end of recovery:
+allmonths <- as.character(
+  seq.Date(from = as.Date(first(names(recov))),
+  to = as.Date(last(names(recov))),
+  by="month"))
+#selecting months with no observations:
+no_obs_mos <- symdiff(names(recov), allmonths)
+#make dummy dataframe with correct dimensions:
+no_obs <- data.frame(matrix(data = NA, nrow = nrow(recov), ncol = length(no_obs_mos)))
+#add the column names to sort by date during cbind:
+colnames(no_obs) <- c(no_obs_mos)
+#cbind for time series:
+full_ts <- cbind(recov, no_obs)[order(c(names(recov),names(no_obs)))]
+
+#x <- 1:length(y)
+# TO DO: NEED TO ADD NON-DATA MONTHS TO TIME SERIES 
+
+sample_site <- data.frame(
+  month = colnames(full_ts),
+  value = as.numeric(full_ts/1000) # corrects for scaling in data from GEE product
+)
+colnames(sample_site) <- c("x","value")
+
+##GGPLOT VERSION ----------------------
+##turn this stuff on and change name to save:
+#fname = "2023_07_20_Slow_Recov_sample_plot_166.tiff"
+#tiff(fname, units = "in", width=12, height=3, res=300)
+ggplot(data = sample_site, mapping = aes(x = as.Date(x), y = value)) +
+  geom_line(color="forestgreen") +
+  geom_point(color="forestgreen") + 
+  geom_line(data = filter(sample_site, is.na(value)==FALSE), 
+            linetype = "dashed", color="forestgreen", size=0.3) +
+  #ylim(c(-3.2, 2)) +
+  labs(title = "Sample Forest Condition: Recovery",
+       y="Condition Score", #or TCG - remember to change when making plots
+       x="Growing Season Month") +
+  #scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
+  theme_bw() + theme(panel.border = element_blank(), 
+                     panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), 
+                     axis.line = element_line(colour = "black"))
+  # theme(panel.grid.major = element_blank(), 
+  #       panel.grid.minor = element_blank())
+#dev.off()
 
 # R PLOT VERSION:---------------------
 # #samp_time_series <- tcgjune[site,]
@@ -43,54 +98,4 @@ x <- 1:length(y)
 #      col = "forestgreen")#,
 #      #ylim = c(-6.75,4.5))
 # #lines(x, y, lwd = 1, col="forestgreen")
-
-sample_site <- data.frame(
-  month = x,
-  value = y/1000 # corrects for scaling in data from GEE product
-)
-colnames(sample_site) <- c("x","value")
-
-##GGPLOT VERSION ----------------------
-##turn this stuff on and change name to save:
-#fname = "2023_07_20_Slow_Recov_sample_plot_166.tiff"
-#tiff(fname, units = "in", width=12, height=3, res=300)
-ggplot(data = sample_site, mapping = aes(x = x, y = value)) +
-  geom_line(color="forestgreen") +
-  geom_point(color="forestgreen") + 
-  geom_line(data = filter(sample_site, is.na(value)==FALSE), 
-            linetype = "dashed", color="forestgreen", size=0.3) +
-  ylim(c(-3.2, 2)) +
-  labs(title = "Sample Forest Condition",
-       y="Condition Score", #or TCG - remember to change when making plots
-       x="Growing Season Month") +
-  scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
-  theme_bw() + theme(panel.border = element_blank(), 
-                     panel.grid.major = element_blank(),
-                     panel.grid.minor = element_blank(), 
-                     axis.line = element_line(colour = "black"))
-  # theme(panel.grid.major = element_blank(), 
-  #       panel.grid.minor = element_blank())
-#dev.off()
-
-
-#testing subset sites:
-# distsites <- c(10,18,21,30,31,32,47,53,60,
-#                66,72,97,98,101,102,105,110,
-#                111,120,130,135,141,142,145,
-#                146,151,152,153,157,160,170,
-#                171,172,188,195,196,203)
-# distsdoub <- c(14,119,147,161,164,166,167,173,174,175,191,197)
-# fastrecov <- c(41,42,43,94,95)
-# slowrecov <- c(48,54,55,58,75,87)
-# 
-# ds <- tcgs[distsites, 21:79]
-# dd <- tcgs[distsdoub, 21:79]
-# fr <- tcgs[fastrecov, 21:79]
-# sr <- tcgs[slowrecov, 21:79]
-# 
-# ds_mr <- hf_data[distsites,]
-# dd_mr <- hf_data[distsdoub,]
-# fr_mr <- hf_data[fastrecov,]
-# sr_mr <- hf_data[slowrecov,]
-
 
