@@ -237,3 +237,20 @@ phase20Yr <- ggplot(data=subset(prodConsRatio, WATERSHED=='020b'),
 ggsave('G:\\Shared drives\\LTER-SPARC_Producers-Consumers-Disturbance\\Figures\\1b_PhaseSpaceDiagrams\\KNZ_PhaseSpaceDiagram_20230726.png', 
        plot=grid.arrange(phaseAnnual, phase4Yr, phase20Yr, ncol=3),
        width=30, height=10, units='in', dpi=300, bg='white')
+
+
+
+#### Percent Change ####
+#growing season precip percent change from 2010 to 2012
+100*((353.600-591.400)/591.400)
+#-40.2%
+
+#plant percent change from 2010 to 2012
+100*((336.2500-646.3850)/646.3850) #annual: -48.0%
+100*((474.5750-441.7150)/441.7150) #4 yr: 7.4%
+100*((245.1275-387.1075)/387.1075) #20 yr: -36.7%
+
+#grasshopper percent change from 2010 to 2012
+100*((164.50000-26.50000)/26.50000) #annual: 520.8%
+100*((131.00000-9.50000)/9.50000) #4 yr: 1278.9%
+100*((297.50000-14.00000)/14.00000) #20 yr: 2025.07%
