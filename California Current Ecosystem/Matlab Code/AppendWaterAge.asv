@@ -1,0 +1,34 @@
+clearvars
+close all
+
+load('..\Processed Data\VertInt & Surface Timeseries.mat')
+load('..\Processed Data\TimeSeries.mat')
+
+folder = '..\..\Chabert et al - Water Age Manuscript\NetCDF Files';
+load([folder,'/','latlon.mat'])
+files = dir(folder);
+files(1:2,:)=[];
+files(end,:)=[];
+for i=1:height(files)
+    tmp = files(i).name;
+    Y = str2num(tmp(10:13));
+    M = str2num(tmp(15:16));
+    D = str2num(tmp(18:19));
+    ChabertDate(i,1) = datetime(Y,M,D);
+end
+
+
+
+%NPP
+for i=1405:1405 %1:height(NPP)
+    if NPP.Date(i)>ChabertDate(1) & NPP.Date(i)<ChabertDate(end)
+        ind = find(  abs(ChabertDate-NPP.Date(i))==min(abs(ChabertDate-NPP.Date(i)))   );
+    end
+    fn = files(ind).name;
+    fn = [folder,'/',fn];
+    AGE = ncread(fn,'touched');
+    AGE(find(AGE==1))=NaN;  %1 is the marker for land
+    AGE(find(AGE==-1))=Inf; %-1 is the marker for age >90 days after which time Chabert did not feel comfortable back-tracking the water parcel
+
+    
+end

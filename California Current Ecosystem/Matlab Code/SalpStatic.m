@@ -1,0 +1,87 @@
+addpath C:\Users\mstukel\OneDrive - Florida State University\Misc Oceanography\Matlab Functions
+
+clearvars
+close all
+
+load('..\..\..\..\Size Spectra\Matlab Synthesis Files\Salp_SizeSpectra.mat')
+MesozooBiomass = sum(Biomass(:,9:13)')';
+clearvars -except MesozooBiomass
+
+load('..\..\..\..\New Zealand\Salp Cruise\Salp Isotope Manuscript\Matlab Synthesis Files\ProtistBiomass.mat');
+PHYTOPLANKTON_BIOMASS = PHYTOPLANKTON_BIOMASS/1000; %mg C / m3
+HETEROTROPHICPROTIST_BIOMASS = HETEROTROPHICPROTIST_BIOMASS/1000;  %mg C / m3
+
+GrowthGrazBalance = readtable('..\..\..\..\New Zealand\Salp Cruise\Collaborative Data/Growth_grazing_balances.xlsx','Range','A2:K8');  %From Decima et al. 2023
+nitrate = [6.41,10.14,3.28,2.55,9.77];
+
+fighandle = figure(102);
+fighandle.Units = 'inches';
+fighandle.Position = [3 1 7 4];
+subplot(1,2,1)
+cycle = 3;
+MakeBox(0,0,[0.75,0.25]*sqrt(nitrate(cycle)),[0.5 0.5 1])
+hold on
+text(0,0,'Nitrate','HorizontalAlignment','center')
+text(1.5,0,[num2str(nitrate(cycle),2),' umol N L^-^1'],'FontSize',6)
+MakeBox(0,3,[1.5,0.5]*sqrt(PHYTOPLANKTON_BIOMASS(cycle)/20),[0.2 1 0.2])
+text(0,3,'Phytoplankton','HorizontalAlignment','center')
+text(1.5,1.9,[num2str(PHYTOPLANKTON_BIOMASS(cycle),2),' mg C m^-^3'],'FontSize',6)
+%MakeBox(0,6,[1,0.5]*(HETEROTROPHICPROTIST_BIOMASS(cycle)+MesozooBiomass(cycle))/20,[1 0 0])
+MakeBox(-2,7,[1,0.5]*sqrt(HETEROTROPHICPROTIST_BIOMASS(cycle)/8),[1 0.3 0.3])
+text(-2,7,['Protistan',char(10),'Consumers'],'HorizontalAlignment','center')
+text(-3.5,6,[num2str(HETEROTROPHICPROTIST_BIOMASS(cycle),2),' mg C m^-^3'],'FontSize',6)
+MakeBox(2,7,[1,0.5]*sqrt((MesozooBiomass(cycle))/8),[1 0.3 0.3])
+text(2,7,['Metazoan',char(10),'Zooplankton'],'HorizontalAlignment','center','FontSize',6)
+text(2,6.3,[num2str(MesozooBiomass(cycle),2),' mg C m^-^3'],'FontSize',6)
+len = 20;
+BaseAngle = 70;
+TipAngle = 40;
+Wid = GrowthGrazBalance.x14CPP(find(GrowthGrazBalance.Cycle==cycle))/50;
+h=arrow([0 0.7],[0 2],len,BaseAngle,TipAngle,Wid);
+text(0.5,1.2,['NPP = ',num2str(GrowthGrazBalance.x14CPP(find(GrowthGrazBalance.Cycle==cycle)),3),' mg C m^-^2 d^-^1'],'FontSize',6)
+Wid = -GrowthGrazBalance.micrograz(find(GrowthGrazBalance.Cycle==cycle))/50;
+h=arrow([-1 4],[-1.5 6],len,BaseAngle,TipAngle,Wid);
+text(-3.8,4.9,[num2str(-GrowthGrazBalance.micrograz(find(GrowthGrazBalance.Cycle==cycle)),3),' mg C m^-^2 d^-^1'],'FontSize',6)
+Wid = -(GrowthGrazBalance.zoop(find(GrowthGrazBalance.Cycle==cycle))+GrowthGrazBalance.salp(find(GrowthGrazBalance.Cycle==cycle)))/50;
+h=arrow([1 4],[1.5 6],len,BaseAngle,TipAngle,Wid);
+text(1.5,4.9,[num2str(-(GrowthGrazBalance.zoop(find(GrowthGrazBalance.Cycle==cycle))+GrowthGrazBalance.salp(find(GrowthGrazBalance.Cycle==cycle))),3),' mg C m^-^2 d^-^1'],'FontSize',6)
+title('Without Disturbance')
+set(gca,'XTick',[],'YTick',[])
+xlim([-3.9 3.7])
+ylim([-0.8 8])
+
+subplot(1,2,2)
+cycle = 4;
+MakeBox(0,0,[0.75,0.25]*sqrt(nitrate(cycle)),[0.5 0.5 1])
+hold on
+text(0,0,'Nitrate','HorizontalAlignment','center')
+text(1.5,0,[num2str(nitrate(cycle),2),' umol N L^-^1'],'FontSize',6)
+MakeBox(0,3,[1.5,0.5]*sqrt(PHYTOPLANKTON_BIOMASS(cycle)/20),[0.2 1 0.2])
+text(0,3,'Phytoplankton','HorizontalAlignment','center')
+text(1.5,2.1,[num2str(PHYTOPLANKTON_BIOMASS(cycle),2),' mg C m^-^3'],'FontSize',6)
+%MakeBox(0,6,[1,0.5]*(HETEROTROPHICPROTIST_BIOMASS(cycle)+MesozooBiomass(cycle))/20,[1 0 0])
+MakeBox(-2,7,[1,0.5]*sqrt(HETEROTROPHICPROTIST_BIOMASS(cycle)/8),[1 0.3 0.3])
+text(-2,7,['Protistan',char(10),'Consumers'],'HorizontalAlignment','center')
+text(-3.5,6,[num2str(HETEROTROPHICPROTIST_BIOMASS(cycle),2),' mg C m^-^3'],'FontSize',6)
+MakeBox(2,7,[1,0.5]*sqrt((MesozooBiomass(cycle))/8),[1 0.3 0.3])
+text(2,7,['Metazoan',char(10),'Zooplankton'],'HorizontalAlignment','center','FontSize',6)
+text(2,6.3,[num2str(MesozooBiomass(cycle),2),' mg C m^-^3'],'FontSize',6)
+len = 20;
+BaseAngle = 70;
+TipAngle = 40;
+Wid = GrowthGrazBalance.x14CPP(find(GrowthGrazBalance.Cycle==cycle))/50;
+h=arrow([0 0.7],[0 2],len,BaseAngle,TipAngle,Wid);
+text(0.5,1.2,['NPP = ',num2str(GrowthGrazBalance.x14CPP(find(GrowthGrazBalance.Cycle==cycle)),3),' mg C m^-^2 d^-^1'],'FontSize',6)
+Wid = -GrowthGrazBalance.micrograz(find(GrowthGrazBalance.Cycle==cycle))/50;
+h=arrow([-1 4],[-1.5 6],len,BaseAngle,TipAngle,Wid);
+text(-3.8,4.9,[num2str(-GrowthGrazBalance.micrograz(find(GrowthGrazBalance.Cycle==cycle)),3),' mg C m^-^2 d^-^1'],'FontSize',6)
+Wid = -(GrowthGrazBalance.zoop(find(GrowthGrazBalance.Cycle==cycle))+GrowthGrazBalance.salp(find(GrowthGrazBalance.Cycle==cycle)))/50;
+h=arrow([1 4],[1.5 6],len,BaseAngle,TipAngle,Wid);
+text(1.5,4.9,[num2str(-(GrowthGrazBalance.zoop(find(GrowthGrazBalance.Cycle==cycle))+GrowthGrazBalance.salp(find(GrowthGrazBalance.Cycle==cycle))),3),' mg C m^-^2 d^-^1'],'FontSize',6)
+title('Salp Swarm')
+set(gca,'XTick',[],'YTick',[])
+xlim([-3.9 3.7])
+ylim([-0.8 8])
+
+exportgraphics(gcf,['..\Figures\','Salp_Static.Consumer_2023-07-26_SalpStatic.png'],'Resolution',600)
+save('SalpStaticData.mat')
