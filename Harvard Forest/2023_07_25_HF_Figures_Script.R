@@ -11,6 +11,7 @@ library(pROC)
 library(ggforce)
 library(hrbrthemes)
 library(viridis)
+library(gghighlight)
 library(tidygam)
 library(lattice)
 library(tactile)
@@ -36,7 +37,7 @@ tcg <- read.csv(tcg_file)
 # NOTE FOR NICK AND ANGEL: This is for choosing plotting either cs time series or tcg time series
 # When using single site you can select that here:
 #site <- 12 # 12 sites in data collection, pick 1-12
-obs <- tcg  # data observations - tcg or cs file from above - tcg for TCG, cs for condition scores
+obs <- cs  # data observations - tcg or cs file from above - tcg for TCG, cs for condition scores
 
 #get just the tcg values from data frame:
 time_series<-obs[,c(grep("^X",colnames(obs)))]
@@ -106,7 +107,7 @@ colnames(time_series) <- str_replace_all(names(time_series), c("X"="",
 # FULL TIME SERIES recov object is just the time_series object (see below)
 # RECOVERY WINDOW: "^2017-06" as disturbance
 # OTHER: can start at any date. From 5-year "steady state" start, use "^2011-04"
-recov <- time_series[,c(first(grep("^2011-04", colnames(time_series))):ncol(time_series))]
+recov <- time_series[,c(first(grep("^2017-06", colnames(time_series))):ncol(time_series))]
 
 #full time series:
 #recov <- time_series
@@ -135,29 +136,33 @@ pivot_ts$site <- sites
 
 ##GGPLOT VERSION ----------------------
 ##turn this stuff on and change name to save:
-fname = "Harvard Forest/HFR_Raw_Time_Series_All_Sites_TCG_2023_07_27.tiff"
-tiff(fname, units = "in", width=12, height=4, res=300)
+#fname = "Harvard Forest/HFR_Raw_Time_Series_All_Sites_TCG_2023_07_27.tiff"
+#tiff(fname, units = "in", width=12, height=4, res=300)
 ggplot(data = pivot_ts, mapping = aes(x = as.Date(name), y = as.numeric(value/1000), 
                                       group = site, color = factor(site))) +
   geom_line(size=0.5) +
   geom_point() + 
   geom_line(data = filter(pivot_ts, is.na(value)==FALSE), 
             linetype = "dashed", size=0.3) +
-  geom_vline(xintercept = as.Date("2017-06-15"),
-             linetype = "dashed", size=0.5) +
-  ylim(c(0, 0.45)) + #for tcg version
-  labs(#title = "Post-Defoliation Recovery",
-       y="Tasseled Cap Greenness Index Value", #or TCG - remember to change when making plots
+  # geom_vline(xintercept = as.Date("2017-06-15"),
+  #            linetype = "dashed", size=0.5) +
+  #ylim(c(0, 0.45)) + #for tcg version
+  labs(title = "Post-Defoliation Recovery",
+       y="Forest Condition Score",
+       #y="Tasseled Cap Greenness Index Value", #or TCG - remember to change when making plots
        x="Time (Months)",
        color = "Site") +
+  # scale_x_continuous(sec.axis = sec_axis(~.,
+  #   name="Months Since Disturbance")) +
   #scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
   theme_bw() + theme(panel.border = element_blank(), 
                      panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(), 
                      axis.line = element_line(colour = "black"))
+  
 # theme(panel.grid.major = element_blank(), 
 #       panel.grid.minor = element_blank())
-dev.off()
+#dev.off()
 
 
 
