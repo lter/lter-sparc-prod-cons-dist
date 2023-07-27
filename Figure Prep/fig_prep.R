@@ -80,7 +80,7 @@ dplyr::glimpse(time_series)
 # RECOVERY WINDOW: "^2017-06" as disturbance
 # OTHER: can start at any date. From 5-year "steady state" start, use "^2011-04"
 recov <- time_series %>%
-  dplyr::select(starts_with("2011-04"):last_col())
+  dplyr::select(starts_with("2017-06"):last_col())
 
 #full time series:
 #recov <- time_series
