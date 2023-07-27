@@ -36,6 +36,9 @@ vignettes/*.pdf
 # R project file(s)
 *.Rproj
 
+# R app history
+.Rapp.history
+
 # DS_Store (for Mac users)
 .DS_Store
 
