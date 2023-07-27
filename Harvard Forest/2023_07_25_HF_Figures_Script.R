@@ -40,7 +40,7 @@ colnames(time_series) <- str_replace_all(names(time_series), c("X"="",
 
 #y <- as.numeric(time_series[site,31:80]) #currently Apr 2011-Aug 2020
 #y <- recov <- time_series[site,c(first(grep("^2017", colnames(time_series))):ncol(time_series))]
-recov <- time_series[site,c(first(grep("^2017", colnames(time_series))):ncol(time_series))]
+recov <- time_series[site,c(first(grep("^2017-06", colnames(time_series))):ncol(time_series))]
 
 ### Adding dummy data to time series of recovery (for months with no observations)
 # getting all months from beginning to end of recovery:
@@ -76,9 +76,9 @@ ggplot(data = sample_site, mapping = aes(x = as.Date(x), y = value)) +
   geom_line(data = filter(sample_site, is.na(value)==FALSE), 
             linetype = "dashed", color="forestgreen", size=0.3) +
   #ylim(c(-3.2, 2)) +
-  labs(title = "Sample Forest Condition: Recovery",
-       y="Condition Score", #or TCG - remember to change when making plots
-       x="Growing Season Month") +
+  labs(title = "Post-Defoliation Recovery",
+       y="Forest Condition Score", #or TCG - remember to change when making plots
+       x="Time (Months)") +
   #scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
   theme_bw() + theme(panel.border = element_blank(), 
                      panel.grid.major = element_blank(),
@@ -87,6 +87,59 @@ ggplot(data = sample_site, mapping = aes(x = as.Date(x), y = value)) +
   # theme(panel.grid.major = element_blank(), 
   #       panel.grid.minor = element_blank())
 #dev.off()
+
+
+### Trying a multi-line plot approach - adding line for each site:
+# make full time series with missing dummy variables -
+# start with grabbing recov section of time series:
+recov <- time_series[,c(first(grep("^2017-06", colnames(time_series))):ncol(time_series))]
+
+### Adding dummy data to time series of recovery (for months with no observations)
+# getting all months from beginning to end of recovery:
+allmonths <- as.character(
+  seq.Date(from = as.Date(first(names(recov))),
+           to = as.Date(last(names(recov))),
+           by="month"))
+#selecting months with no observations:
+no_obs_mos <- symdiff(names(recov), allmonths)
+#make dummy dataframe with correct dimensions:
+no_obs <- data.frame(matrix(data = NA, nrow = nrow(recov), ncol = length(no_obs_mos)))
+#add the column names to sort by date during cbind:
+colnames(no_obs) <- c(no_obs_mos)
+#cbind for time series:
+full_ts <- cbind(recov, no_obs)[order(c(names(recov),names(no_obs)))]
+
+#add data for identifying site:
+sites <- rep(1:nrow(full_ts), each = ncol(full_ts))
+# make the data long:
+pivot_ts <- pivot_longer(full_ts, cols = everything())
+#add the site ID:
+pivot_ts$site <- sites
+
+##GGPLOT VERSION ----------------------
+##turn this stuff on and change name to save:
+#fname = "2023_07_20_Slow_Recov_sample_plot_166.tiff"
+#tiff(fname, units = "in", width=12, height=3, res=300)
+ggplot(data = pivot_ts, mapping = aes(x = as.Date(name), y = as.numeric(value/1000), 
+                                      group = site, color = factor(site))) +
+  geom_line() +
+  geom_point() + 
+  geom_line(data = filter(pivot_ts, is.na(value)==FALSE), 
+            linetype = "dashed", size=0.3) +
+  #ylim(c(-3.2, 2)) +
+  labs(title = "Post-Defoliation Recovery",
+       y="Forest Condition Score", #or TCG - remember to change when making plots
+       x="Time (Months)") +
+  #scale_x_continuous(breaks = seq(min(x), max(x), by = 5)) +
+  theme_bw() + theme(panel.border = element_blank(), 
+                     panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(), 
+                     axis.line = element_line(colour = "black"))
+# theme(panel.grid.major = element_blank(), 
+#       panel.grid.minor = element_blank())
+#dev.off()
+
+
 
 # R PLOT VERSION:---------------------
 # #samp_time_series <- tcgjune[site,]
