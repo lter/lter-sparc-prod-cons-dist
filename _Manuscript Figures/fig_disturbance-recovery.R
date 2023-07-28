@@ -173,7 +173,7 @@ tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites))
   labs(y = "Tasseled Cap Greenness\n Index Value", x = "Year", fill = "Site") +
   # Customize theme elements
   recovery_theme +
-  theme(legend.position = "bottom",
+  theme(legend.position = "right",
         axis.title.y = element_text(size = 12.5),
         axis.title.x = element_text(size = 14)); tcg_series
 
