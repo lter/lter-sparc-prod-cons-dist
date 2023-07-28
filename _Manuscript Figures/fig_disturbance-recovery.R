@@ -250,11 +250,14 @@ cowplot::plot_grid(cce_fig, tcg_series, labels = c("", "C"), ncol = 1)
 # Make a folder for local export of the figure
 dir.create(path = file.path("_Manuscript Figures", "figure_files"), showWarnings = F)
 
-# Generate a file name
-recov_name <- "disturbance_recovery.png"
+# Generate a file path object that includes a new file name
+recov_path <- file.path("_Manuscript Figures", "figure_files", "disturbance_recovery.png")
 
 # Export locally
-ggsave(filename = file.path("_Manuscript Figures", "figure_files", recov_name), 
-       plot = last_plot(), height = 9, width = 10, units = "in")
+ggsave(filename = recov_path, plot = last_plot(), height = 9, width = 10, units = "in")
+
+# Upload this file to the Drive
+googledrive::drive_upload(media = recov_path, overwrite = T,
+                          path = googledrive::as_id("https://drive.google.com/drive/u/0/folders/1MKpJUKEjlwLF-pJ-wKhBbjDqSKLkyKuq"))
 
 # End ----
