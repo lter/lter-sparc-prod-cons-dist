@@ -140,6 +140,10 @@ dplyr::glimpse(herb_v2)
             # Figure Creation ----
 ## ------------------------------------------ ##
 
+# Get color palette for HFR graphs
+hfr_colors <- c("#001219", "#005f73","#4895ef", "#0a9396",  "#94d2bd", "#e9d8a6", 
+                "#ee9b00", "#ca6702", "#bb3e03", "#ae2012", "#9b2226", "#6a040f")
+
 # Define the ggplot2 theme for all of these graphs
 recovery_theme <- theme_bw() + 
   theme(panel.border = element_blank(), 
@@ -149,85 +153,86 @@ recovery_theme <- theme_bw() +
 
 # Make Tasseled Cap Greeness graph
 tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
-  geom_line(aes(group = sites), linewidth = 0.5) +
-  geom_point() +
+  geom_line(aes(group = sites), linewidth = 0.5, show.legend = F,
+            position = position_dodge(width = 0.2)) +
+  geom_point(aes(fill = sites), pch = 21, size = 2.5, color = "black", alpha = 0.8,
+             position = position_dodge(width = 0.2)) +
   # Add a dashed line connecting missing parts of each sites' time series
   geom_line(data = dplyr::filter(tcg_v2, !is.na(tcg_value)), 
-            linetype = "dashed", linewidth = 0.3) +
+            linetype = "dashed", linewidth = 0.3, show.legend = F,
+            position = position_dodge(width = 0.2)) +
   # Vertical line at disturbance date
   geom_vline(xintercept = as.Date("2017-06-15"),
              linetype = "dashed", linewidth = 0.5) +
   # Y-axis limits
   lims(y = c(0, 0.45)) + 
+  # Customize colors
+  scale_color_manual(values = hfr_colors) +
+  scale_fill_manual(values = hfr_colors) +
   # Custom axis labels
-  labs(y = "Tasseled Cap Greenness Index Value", x = "Year", color = "Site") +
+  labs(y = "Tasseled Cap Greenness Index Value", x = "Year", fill = "Site") +
   # Customize theme elements
   recovery_theme +
-  theme(axis.title.y = element_text(size = 12.5),
-        axis.title.x = element_text(size = 14))
-
-# Check that out
-tcg_series
+  theme(legend.position = "right",
+        axis.title.y = element_text(size = 12.5),
+        axis.title.x = element_text(size = 14)); tcg_series
 
 # Make the same graph for condition score
 cs_series <- ggplot(data = cs_v2, aes(x = date, y = cs_value, color = sites)) +
-  geom_line(aes(group = sites), linewidth = 0.5) +
-  geom_point() +
+  geom_line(aes(group = sites), linewidth = 0.5, show.legend = F,
+            position = position_dodge(width = 0.2)) +
+  geom_point(aes(fill = sites), pch = 21, size = 2.5, color = "black", alpha = 0.8,
+             position = position_dodge(width = 0.2)) +
   # Add a dashed line connecting missing parts of each sites' time series
   geom_line(data = dplyr::filter(cs_v2, !is.na(cs_value)), 
-            linetype = "dashed", linewidth = 0.3) +
+            linetype = "dashed", linewidth = 0.3, show.legend = F,
+            position = position_dodge(width = 0.2)) +
   # Vertical line at disturbance date
   geom_vline(xintercept = as.Date("2017-06-15"),
              linetype = "dashed", linewidth = 0.5) +
+  # Customize colors
+  scale_color_manual(values = hfr_colors) +
+  scale_fill_manual(values = hfr_colors) +
   # Custom axis labels
-  labs(y = "Condition Score", x = "Year", color = "Site") +
+  labs(y = "Condition Score", x = "Year", fill = "Site") +
   # Customize theme elements
   recovery_theme +
-  theme(axis.title = element_text(size = 14))
-
-# Look at that
-cs_series
+  theme(axis.title = element_text(size = 14)); cs_series
 
 # Generate a graph of NPP at CCE
 npp_vs_age <- ggplot(npp_v2, aes(x = WaterAge, y = NPP, fill = 'x')) +
   geom_point(pch = 24, size = 2.5, alpha = 0.8) +
   geom_smooth(method = "loess", formula = "y ~ x", se = F, 
-              color = "black", linewidth = 2) +
+              color = "#bf812d", linewidth = 1.5) +
   # Custom axis labels (using markdown formatting to get formatting correct)
   labs(y = "Net Primary Production<br>mg C m<sup>-2</sup> / half photoperiod", 
        x =  "Water Parcel Age (days)<br>*sensu* Chabert *et al.*") +
   # Customize color / fill
-  scale_fill_manual(values = "#38a3a5") +
+  scale_fill_manual(values = "#35978f") +
   # Customize theme elements
   recovery_theme +
   theme(legend.position = "none",
         axis.title.x = ggtext::element_markdown(size = 15),
-        axis.title.y = ggtext::element_markdown(size = 14.5))
-
-# Look at graph
-npp_vs_age
+        axis.title.y = ggtext::element_markdown(size = 14.5)); npp_vs_age
 
 # Herbivore biomass graph
 herb_vs_age <- ggplot(herb_v2, aes(x = WaterAge, y = HerbivoreBiomass, fill = 'x')) +
   geom_point(pch = 22, size = 3.5, alpha = 0.8) +
   geom_smooth(method = "loess", formula = "y ~ x", se = F, 
-              color = "black", linewidth = 2) +
+              color = "#4d9221", linewidth = 2) +
   # Custom axis labels (using markdown formatting to get formatting correct)
   labs(y = "Herbivorous Metazoan Biomass<br>(mg C m<sup>-2</sup>)", 
        x =  "Water Parcel Age (days)<br>*sensu* Chabert *et al.*") +
   # Customize color / fill
-  scale_fill_manual(values = "#9d4edd") +
+  scale_fill_manual(values = "#c51b7d") +
   # Customize theme elements
   recovery_theme +
   theme(legend.position = "none",
         axis.title.x = ggtext::element_markdown(size = 15),
-        axis.title.y = ggtext::element_markdown(size = 14.5))
-
-# Look at graph
-herb_vs_age
+        axis.title.y = ggtext::element_markdown(size = 14.5)); herb_vs_age
 
 ## ------------------------------------------ ##
-# Figure Assembly & Export ----
+        # Figure Assembly & Export ----
 ## ------------------------------------------ ##
 
 # Make a folder for local export of the figure
