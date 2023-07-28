@@ -196,6 +196,8 @@ npp_vs_age <- ggplot(npp_v2, aes(x = WaterAge, y = NPP, fill = 'x')) +
   # Custom axis labels (using markdown formatting to get formatting correct)
   labs(y = "Net Primary Production<br>mg C m<sup>-2</sup> / half photoperiod", 
        x =  "Water Parcel Age (days)<br>*sensu* Chabert *et al.*") +
+  # Customize color / fill
+  scale_fill_manual(values = "#38a3a5") +
   # Customize theme elements
   recovery_theme +
   theme(legend.position = "none",
@@ -204,6 +206,25 @@ npp_vs_age <- ggplot(npp_v2, aes(x = WaterAge, y = NPP, fill = 'x')) +
 
 # Look at graph
 npp_vs_age
+
+# Herbivore biomass graph
+herb_vs_age <- ggplot(herb_v2, aes(x = WaterAge, y = HerbivoreBiomass, fill = 'x')) +
+  geom_point(pch = 22, size = 3.5, alpha = 0.8) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = F, 
+              color = "black", linewidth = 2) +
+  # Custom axis labels (using markdown formatting to get formatting correct)
+  labs(y = "Herbivorous Metazoan Biomass<br>(mg C m<sup>-2</sup>)", 
+       x =  "Water Parcel Age (days)<br>*sensu* Chabert *et al.*") +
+  # Customize color / fill
+  scale_fill_manual(values = "#9d4edd") +
+  # Customize theme elements
+  recovery_theme +
+  theme(legend.position = "none",
+        axis.title.x = ggtext::element_markdown(size = 15),
+        axis.title.y = ggtext::element_markdown(size = 14.5))
+
+# Look at graph
+herb_vs_age
 
 ## ------------------------------------------ ##
 # Figure Assembly & Export ----
