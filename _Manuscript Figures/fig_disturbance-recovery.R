@@ -11,7 +11,7 @@
 ## ------------------------------------------ ##
 # Load libraries
 # install.packages("librarian")
-librarian::shelf(googledrive, tidyverse, lubridate, ggtext)
+librarian::shelf(googledrive, tidyverse, lubridate, ggtext, cowplot)
 
 # Clear environment
 rm(list = ls())
@@ -170,10 +170,10 @@ tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites))
   scale_color_manual(values = hfr_colors) +
   scale_fill_manual(values = hfr_colors) +
   # Custom axis labels
-  labs(y = "Tasseled Cap Greenness Index Value", x = "Year", fill = "Site") +
+  labs(y = "Tasseled Cap Greenness\n Index Value", x = "Year", fill = "Site") +
   # Customize theme elements
   recovery_theme +
-  theme(legend.position = "right",
+  theme(legend.position = "bottom",
         axis.title.y = element_text(size = 12.5),
         axis.title.x = element_text(size = 14)); tcg_series
 
@@ -235,12 +235,27 @@ herb_vs_age <- ggplot(herb_v2, aes(x = WaterAge, y = HerbivoreBiomass, fill = 'x
         # Figure Assembly & Export ----
 ## ------------------------------------------ ##
 
+# Check out the panel options
+tcg_series
+cs_series
+npp_vs_age
+herb_vs_age
+
+# Assemble the two CCE graphs into one, two-panel figure
+(cce_fig <- cowplot::plot_grid(npp_vs_age, herb_vs_age, nrow = 1, labels = "AUTO"))
+
+# Add in the HFR graph of choice beneath these two
+cowplot::plot_grid(cce_fig, tcg_series, labels = c("", "C"), ncol = 1)
+
 # Make a folder for local export of the figure
 dir.create(path = file.path("_Manuscript Figures", "figure_files"), showWarnings = F)
 
+# Generate a file name
+recov_name <- "disturbance_recovery.png"
 
-
-
+# Export locally
+ggsave(filename = file.path("_Manuscript Figures", "figure_files", recov_name), 
+       plot = last_plot(), height = 9, width = 10, units = "in")
 
 # End ----
 
