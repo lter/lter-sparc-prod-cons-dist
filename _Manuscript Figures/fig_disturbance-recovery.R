@@ -4,7 +4,7 @@
 # Written by: Angel Chen, Nick J Lyon
 
 # PURPOSE
-## Combining Mike's and Charlotte's plots into the same figure
+## Combining Mike's (CCE) and Charlotte's (HFR) plots into the same figure
 
 ## ------------------------------------------ ##
 #               Housekeeping ----
@@ -117,6 +117,24 @@ cs_v2 <- cs %>%
 
 # Re-check structure
 dplyr::glimpse(cs_v2)
+
+# Wrangle CCE net primary productivity data
+npp_v2 <- npp %>%
+  # Drop absent data
+  dplyr::filter(!is.na(WaterAge) & !is.na(NPP)) %>%
+  # Drop 'infinity' as a water age value
+  dplyr::filter(WaterAge < Inf)
+
+# Check structure
+dplyr::glimpse(npp_v2)
+
+# Wrangle herbivore biomass CCE data
+herb_v2 <- herb %>%
+  # Keep only data with values for both columns
+  dplyr::filter(!is.na(WaterAge) & !is.na(HerbivoreBiomass))
+
+# Check structure
+dplyr::glimpse(herb_v2)
 
 ## ------------------------------------------ ##
             # Figure Creation ----
