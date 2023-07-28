@@ -11,7 +11,7 @@
 ## ------------------------------------------ ##
 # Load libraries
 # install.packages("librarian")
-librarian::shelf(googledrive, tidyverse, lubridate)
+librarian::shelf(googledrive, tidyverse, lubridate, ggtext)
 
 # Clear environment
 rm(list = ls())
@@ -187,6 +187,23 @@ cs_series <- ggplot(data = cs_v2, aes(x = date, y = cs_value, color = sites)) +
 
 # Look at that
 cs_series
+
+# Generate a graph of NPP at CCE
+npp_vs_age <- ggplot(npp_v2, aes(x = WaterAge, y = NPP, fill = 'x')) +
+  geom_point(pch = 24, size = 2.5, alpha = 0.8) +
+  geom_smooth(method = "loess", formula = "y ~ x", se = F, 
+              color = "black", linewidth = 2) +
+  # Custom axis labels (using markdown formatting to get formatting correct)
+  labs(y = "Net Primary Production<br>mg C m<sup>-2</sup> / half photoperiod", 
+       x =  "Water Parcel Age (days)<br>*sensu* Chabert *et al.*") +
+  # Customize theme elements
+  recovery_theme +
+  theme(legend.position = "none",
+        axis.title.x = ggtext::element_markdown(size = 15),
+        axis.title.y = ggtext::element_markdown(size = 14.5))
+
+# Look at graph
+npp_vs_age
 
 ## ------------------------------------------ ##
 # Figure Assembly & Export ----
