@@ -69,8 +69,9 @@ tcg_v2 <- tcg %>%
                                                      c("X|_score_mean|_tcg_mean" = "", 
                                                        "\\." = "-"))) %>%
   # Break out year and month information
-  dplyr::mutate(year = as.numeric(stringr::str_sub(string = date_char, start = 1, end = 4)),
-                month = as.numeric(stringr::str_sub(string = date_char, start = 6, end = 7))) %>%
+  dplyr::mutate(
+    year = as.numeric(stringr::str_sub(string = date_char, start = 1, end = 4)),
+    month = as.numeric(stringr::str_sub(string = date_char, start = 6, end = 7))) %>%
   # Get a real date column
   dplyr::mutate(date = as.Date(date_char)) %>%
   # Keep only after June of 2017
@@ -87,13 +88,46 @@ tcg_v2 <- tcg %>%
 dplyr::glimpse(tcg_v2)
 
 # Wrangle the condition score data as well
+cs_v2 <- cs %>%
+  # Drop unwanted columns
+  dplyr::select(dplyr::starts_with("X")) %>%
+  # Generate site column
+  dplyr::mutate(sites = as.factor(1:nrow(x = .)), .before = dplyr::everything()) %>%
+  # Flip to long format
+  tidyr::pivot_longer(cols = dplyr::starts_with("X")) %>%
+  # Strip out just the actual date
+  dplyr::mutate(date_char = stringr::str_replace_all(string = name,
+                                                     c("X|_score_mean|_tcg_mean" = "", 
+                                                       "\\." = "-"))) %>%
+  # Break out year and month information
+  dplyr::mutate(
+    year = as.numeric(stringr::str_sub(string = date_char, start = 1, end = 4)),
+    month = as.numeric(stringr::str_sub(string = date_char, start = 6, end = 7))) %>%
+  # Get a real date column
+  dplyr::mutate(date = as.Date(date_char)) %>%
+  # Keep only after June of 2017
+  dplyr::filter(date > as.Date("2017-06-15")) %>%
+  # Divide condition score (CS) by 1000
+  dplyr::mutate(cs_value = value / 1000) %>%
+  # Count months since disturbance
+  dplyr::mutate(time_after = lubridate::interval(start = as.Date("2017-06-15"), end = date),
+                months_after = floor(time_after / months(x = 1))) %>%
+  # Pare down to only needed columns
+  dplyr::select(sites, date, months_after, cs_value)
 
-
-
+# Re-check structure
+dplyr::glimpse(cs_v2)
 
 ## ------------------------------------------ ##
             # Figure Creation ----
 ## ------------------------------------------ ##
+
+# Define the ggplot2 theme for all of these graphs
+recovery_theme <- theme_bw() + 
+  theme(panel.border = element_blank(), 
+        panel.grid = element_blank(),
+        axis.text = element_text(size = 13),
+        axis.line = element_line(colour = "black"))
 
 # Make Tasseled Cap Greeness graph
 tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
@@ -110,20 +144,34 @@ tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites))
   # Custom axis labels
   labs(y = "Tasseled Cap Greenness Index Value", x = "Year", color = "Site") +
   # Customize theme elements
-  theme_bw() + 
-  theme(panel.border = element_blank(), 
-        panel.grid = element_blank(),
-        axis.text = element_text(size = 13),
-        axis.title.y = element_text(size = 12.5),
-        axis.title.x = element_text(size = 14),
-        axis.line = element_line(colour = "black"))
+  recovery_theme +
+  theme(axis.title.y = element_text(size = 12.5),
+        axis.title.x = element_text(size = 14))
 
 # Check that out
 tcg_series
 
+# Make the same graph for condition score
+cs_series <- ggplot(data = cs_v2, aes(x = date, y = cs_value, color = sites)) +
+  geom_line(aes(group = sites), linewidth = 0.5) +
+  geom_point() +
+  # Add a dashed line connecting missing parts of each sites' time series
+  geom_line(data = dplyr::filter(cs_v2, !is.na(cs_value)), 
+            linetype = "dashed", linewidth = 0.3) +
+  # Vertical line at disturbance date
+  geom_vline(xintercept = as.Date("2017-06-15"),
+             linetype = "dashed", linewidth = 0.5) +
+  # Custom axis labels
+  labs(y = "Condition Score", x = "Year", color = "Site") +
+  # Customize theme elements
+  recovery_theme +
+  theme(axis.title = element_text(size = 14))
+
+# Look at that
+cs_series
 
 ## ------------------------------------------ ##
-# Figure Export ----
+# Figure Assembly & Export ----
 ## ------------------------------------------ ##
 
 # Make a folder for local export of the figure
