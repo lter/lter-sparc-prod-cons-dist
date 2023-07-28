@@ -235,29 +235,45 @@ herb_vs_age <- ggplot(herb_v2, aes(x = WaterAge, y = HerbivoreBiomass, fill = 'x
         # Figure Assembly & Export ----
 ## ------------------------------------------ ##
 
+# Make a local folder for exporting figures
+dir.create(path = file.path("_Manuscript Figures", "figure_files"), showWarnings = F)
+
+# Identify the Drive folder finished figures should be uploaded to
+recov_drive <- googledrive::as_id("https://drive.google.com/drive/u/0/folders/1MKpJUKEjlwLF-pJ-wKhBbjDqSKLkyKuq")
+
 # Check out the panel options
 tcg_series
 cs_series
 npp_vs_age
 herb_vs_age
 
-# Assemble the two CCE graphs into one, two-panel figure
-(cce_fig <- cowplot::plot_grid(npp_vs_age, herb_vs_age, nrow = 1, labels = "AUTO"))
+# Make the two-panel graph (HFR + NPP from CCE)
+(two_panel <- cowplot::plot_grid(tcg_series, npp_vs_age, ncol = 1, labels = "AUTO"))
 
-# Add in the HFR graph of choice beneath these two
-cowplot::plot_grid(cce_fig, tcg_series, labels = c("", "C"), ncol = 1)
-
-# Make a folder for local export of the figure
-dir.create(path = file.path("_Manuscript Figures", "figure_files"), showWarnings = F)
-
-# Generate a file path object that includes a new file name
-recov_path <- file.path("_Manuscript Figures", "figure_files", "disturbance_recovery.png")
+# Generate a filepath/name for this figure
+twopan_path <- file.path("_Manuscript Figures", "figure_files", 
+                         "disturbance_recovery_2panel.png")
 
 # Export locally
-ggsave(filename = recov_path, plot = last_plot(), height = 9, width = 10, units = "in")
+ggsave(filename = twopan_path, plot = two_panel, height = 9, width = 10, units = "in")
 
 # Upload this file to the Drive
-googledrive::drive_upload(media = recov_path, overwrite = T,
-                          path = googledrive::as_id("https://drive.google.com/drive/u/0/folders/1MKpJUKEjlwLF-pJ-wKhBbjDqSKLkyKuq"))
+googledrive::drive_upload(media = twopan_path, overwrite = T, path = recov_drive)
+
+# To make the three-panel graph, we need to make a 2-panel CCE graph first
+(cce_fig <- cowplot::plot_grid(npp_vs_age, herb_vs_age, nrow = 1, labels = "AUTO"))
+
+# Now we can add in the HFR graph of choice beneath these two
+(three_panel <- cowplot::plot_grid(cce_fig, tcg_series, labels = c("", "C"), ncol = 1))
+
+# Generate a file path object that includes a new file name
+threepan_path <- file.path("_Manuscript Figures", "figure_files",
+                           "disturbance_recovery_3panel.png")
+
+# Export locally
+ggsave(filename = threepan_path, plot = three_panel, height = 9, width = 10, units = "in")
+
+# Upload this file to the Drive
+googledrive::drive_upload(media = threepan_path, overwrite = T, path = recov_drive)
 
 # End ----
