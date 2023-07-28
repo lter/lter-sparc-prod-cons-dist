@@ -11,7 +11,7 @@
 ## ------------------------------------------ ##
 # Load libraries
 # install.packages("librarian")
-librarian::shelf(googledrive, tidyverse, supportR)
+librarian::shelf(googledrive, tidyverse, supportR, lubridate)
 
 # Clear environment
 rm(list = ls())
@@ -25,19 +25,19 @@ mikes_files <- googledrive::drive_ls(googledrive::as_id("https://drive.google.co
   dplyr::filter(name %in% c("Herbivore v Water Age.csv", "NPP v Water Age.csv"))
 
 # Create a folder to write these files to
-dir.create(path = file.path("California Current Ecosystem", "source_data"), showWarnings = F)
+dir.create(path = file.path("_Manuscript Figures", "source_data"), showWarnings = F)
 
 # Download these files into that folder
 purrr::walk2(.x = mikes_files$id, .y = mikes_files$name,
-             .f = ~ googledrive::drive_download(file = googledrive::as_id(.x),
-                                                path = file.path("California Current Ecosystem", "source_data", .y),
-                                                overwrite = T))
+             .f = ~ googledrive::drive_download(file = googledrive::as_id(.x), overwrite = T,
+                                                path = file.path("_Manuscript Figures",
+                                                                 "source_data", .y)))
 
 ## ------------------------------------------ ##
 #             Read in Data ----
 ## ------------------------------------------ ##
 # Point to Mike's folder
-CCE_path <- file.path("California Current Ecosystem", "source_data")
+CCE_path <- file.path("_Manuscript Figures", "source_data")
 
 # Point to Charlotte's folder
 HF_path <- file.path("Harvard Forest", "HF_2021_Paper_Data")
@@ -55,7 +55,6 @@ tcg <- read.csv(file.path(HF_path, "2023_07_25_LTER_plots_monthly_tcg_mean.csv")
 ## ------------------------------------------ ##
 # NOTE: this section was adapted from 2023_07_25_HF_Figures_Script.R
 # Harvard Forest data - Landsat time series at some of the sites:
-obs <- tcg  # data observations - tcg or cs file from above - tcg for TCG, cs for condition scores
 
 # Process some information from the time series
 tcg_v2 <- tcg %>%
@@ -72,13 +71,17 @@ tcg_v2 <- tcg %>%
   # Break out year and month information
   dplyr::mutate(year = as.numeric(stringr::str_sub(string = date_char, start = 1, end = 4)),
                 month = as.numeric(stringr::str_sub(string = date_char, start = 6, end = 7))) %>%
-  # Drop unwanted years / dates
-  ## Keep only after 2017 or after June of 2017
-  dplyr::filter(year > 2017 | year == 2017 & month >= 6) %>%
   # Get a real date column
   dplyr::mutate(date = as.Date(date_char)) %>%
+  # Keep only after June of 2017
+  dplyr::filter(date > as.Date("2017-06-15")) %>%
   # Divide tassled cap greenness (TCG) by 1000
-  dplyr::mutate(tcg_value = value / 1000)
+  dplyr::mutate(tcg_value = value / 1000) %>%
+  # Count months since disturbance
+  dplyr::mutate(time_after = lubridate::interval(start = as.Date("2017-06-15"), end = date),
+                months_after = floor(time_after / months(x = 1))) #%>%
+  # Pare down to only needed columns
+  dplyr::select(sites, date, months_after, tcg_value)
   
 # Check structure
 dplyr::glimpse(tcg_v2)
@@ -96,9 +99,15 @@ ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
   # Y-axis limits
   lims(y = c(0, 0.45)) + 
   # Custom axis labels
-  labs(y = "Tasseled Cap Greenness Index Value", x = "Time (Months)", color = "Site") +
+  labs(y = "Tasseled Cap Greenness Index Value", x = "Year", color = "Site") +
   # Customize theme elements
-  supportR::theme_lyon()
+  theme_bw() + 
+  theme(panel.border = element_blank(), 
+        panel.grid = element_blank(),
+        axis.text = element_text(size = 13),
+        axis.title.y = element_text(size = 12.5),
+        axis.title.x = element_text(size = 14),
+        axis.line = element_line(colour = "black"))
 
 
 
