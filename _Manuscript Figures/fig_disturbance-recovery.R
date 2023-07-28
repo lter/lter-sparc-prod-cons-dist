@@ -11,7 +11,7 @@
 ## ------------------------------------------ ##
 # Load libraries
 # install.packages("librarian")
-librarian::shelf(googledrive, tidyverse, supportR, lubridate)
+librarian::shelf(googledrive, tidyverse, lubridate)
 
 # Clear environment
 rm(list = ls())
@@ -79,15 +79,24 @@ tcg_v2 <- tcg %>%
   dplyr::mutate(tcg_value = value / 1000) %>%
   # Count months since disturbance
   dplyr::mutate(time_after = lubridate::interval(start = as.Date("2017-06-15"), end = date),
-                months_after = floor(time_after / months(x = 1))) #%>%
+                months_after = floor(time_after / months(x = 1))) %>%
   # Pare down to only needed columns
   dplyr::select(sites, date, months_after, tcg_value)
   
 # Check structure
 dplyr::glimpse(tcg_v2)
 
-# Make exploratory plot
-ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
+# Wrangle the condition score data as well
+
+
+
+
+## ------------------------------------------ ##
+            # Figure Creation ----
+## ------------------------------------------ ##
+
+# Make Tasseled Cap Greeness graph
+tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
   geom_line(aes(group = sites), linewidth = 0.5) +
   geom_point() +
   # Add a dashed line connecting missing parts of each sites' time series
@@ -109,10 +118,26 @@ ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
         axis.title.x = element_text(size = 14),
         axis.line = element_line(colour = "black"))
 
+# Check that out
+tcg_series
+
+
+## ------------------------------------------ ##
+# Figure Export ----
+## ------------------------------------------ ##
+
+# Make a folder for local export of the figure
+dir.create(path = file.path("_Manuscript Figures", "figure_files"), showWarnings = F)
 
 
 
 
+
+# End ----
+
+# BASEMENT ----
+
+## Superseded code retained for posterity
 
 time_series <- obs %>%
   # Get just the tcg values from data frame:
