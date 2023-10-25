@@ -2,8 +2,8 @@
 
 correspondence to: J. Aaron Hogan  jamesaaronhogan@gmail.com
 
-Analyses were mostly done at NCEAS in SantaBarbara
-Data are not included in this repo, as they are publically available. 
+Analyses were mostly done at NCEAS in Santa Barbara, CA during late June 2023. 
+Data are not included in this repo, as they are publically available (see citaitons below). 
 
 * Arthropod Dataset: 
 Schowalter, T. 2018. Canopy invertebrate responses to Hurricane Hugo ver 2410865. Environmental Data Initiative. https://doi.org/10.6073/pasta/82d334e74866175c791e557d8c303a62 (Accessed 2023-09-29).
