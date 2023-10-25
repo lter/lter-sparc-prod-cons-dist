@@ -1,0 +1,928 @@
+---
+title: "LUQUILLO LITTERFALL & ARTHROPODS"
+author: "JAH"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    toc_collapsed: yes
+    toc_depth: 3
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE, echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r wrap-hook}
+library(knitr)
+hook_output = knit_hooks$get('output')
+knit_hooks$set(output = function(x, options) {
+  # this hook is used only when the linewidth option is not NULL
+  if (!is.null(n <- options$linewidth)) {
+    x = knitr:::split_lines(x)
+    # any lines wider than n should be wrapped
+    if (any(nchar(x) > n)) x = strwrap(x, width = n)
+    x = paste(x, collapse = '\n')
+  }
+  hook_output(x, options)
+})
+```
+
+```{r}
+### load up the needed libraries
+library(readr)
+library(tidyverse)
+library(zoo)
+
+## read in TIm Schowalter Arthropod Data -- arth
+##
+arth <- read_csv("C:/Users/hogie/Dropbox/SPRAC/datasets/insects/knb-lter-luq.96.2410865/EVArthropods.csv", 
+                 col_types = cols(YMD = col_date(format = "%Y%m%d"), 
+                                  BLK = col_factor(levels = c("0","1", "2", "3", "4", "5", "6", "7", "8")), 
+                                  TRT = col_factor(levels = c("1","2","3","4","C","CM","CT1","CT2","G","N","U"))))
+
+arth$SpeciesCode <- as.factor(arth$SpeciesCode)  ## SpeciesCode as factor
+
+## read in Tim Schowalter Arthropod weights -- for conversion of arthropod abundances to biomass
+arth_masses <- read_csv("C:/Users/hogie/Dropbox/SPRAC/datasets/insects/EVArthropods_UNIQUE_CODES.csv",
+                        col_types = cols(Trophic_Level = col_factor(levels = c("2","3")), 
+                                         Guild= col_factor(levels = c("C","D","F","HERBIVORY","M","O","P","S"))))
+                        
+arth_masses$SpeciesCode <-  as.factor(arth_masses$SpeciesCode)  ## CODE as factor
+
+## guilds are:  C = carnivore, D = detritivore, F = foliovore, HERBIVORY = measure of herbivory (% leaf area lost), 
+##              M = miscellaneous, O  = omnivore, P = predator, S = Sap-sucker.
+
+### read in litterfall data
+litter <- read_csv("C:/Users/hogie/Dropbox/SPRAC/datasets/litterfall/LUQ_CombinedLitterfall.csv", 
+                   col_types = cols(Dataset = col_factor(levels = c("MRCE_EV", "CTE")), 
+                                    Date = col_date(format = "%m/%d/%Y"), 
+                                    Block = col_factor(levels = c("I", "II", "III", "IV", "A", "B", "C")), 
+                                    Plot = col_factor(levels = c("1", "2", "3", "4", "5"))))
+```
+
+# Arthropods
+
+## data processing - biomasses
+```{r}
+### see Tim Schowalter email -- gmail -- April 22, 2023
+
+### Arthropod sample counts should be divided by the sample weights for each tree species to get standardized numbers per foliage weight, then multiplied by arthropod masses, then by the foliage biomass for each tree species to get weighted abundances for your biomass estimates
+
+### Unweighted arthropod masses would over-represent arthropod mass on tree species with lower biomass and under-represent arthropod masses on tree species with higher biomass. Let me know if you need more information.
+
+# ### METHOD 1 -- could be wrong
+# 
+# ## step 1: divide masses by FWT (Foliar weight in g)
+# arth$Count_FWT <- arth$SpeciesCount / arth$FWT
+# 
+# arth[is.nan(arth$Count_FWT),]$Count_FWT <- 0 ## fix divide by zero NAN
+# 
+# ## merge species weights into dataframe
+# arth <- merge(arth, arth_masses, by = c("SpeciesCode"))
+# 
+# 
+# ## step 2: 
+# arth$biomass <- arth$Count_FWT * arth$Mean_Weight_mg
+#   
+# ## step 3 standardize biomass by FWT  
+# arth$Biomass_FWT <- arth$biomass * arth$FWT
+
+
+## METHOD 2 -- 
+arth <- arth[!arth$SpeciesCount == -99,] ## remove these missing data -- no record for that species on that sampling day
+
+## merge species weights into dataframe
+arth <- merge(arth, arth_masses, by = c("SpeciesCode"))
+
+## calculate
+arth$Biomass_FWT <- (arth$SpeciesCount * arth$Mean_Weight_mg)  / arth$FWT
+
+##  fix nan's  created by divide by zero problem
+arth[is.nan(arth$Biomass_FWT),]$Biomass_FWT <- 0
+```
+
+```{r}
+arth_frame <- arth %>% group_by(YMD) %>% summarize(all_biomass = sum(Biomass_FWT, na.rm = T))
+
+arth_series <- zoo(arth_frame$all_biomass, order.by = arth_frame$YMD)
+
+
+plot(arth_series, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "all arthropods")
+
+abline(v = as.Date("09-21-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+abline(v = as.Date("09-22-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+
+```
+```{r}
+
+arth_frame1_leafeaters <- arth[arth$Guild %in% c("D", "F"),] %>% group_by(YMD) %>% summarize(all_biomass = sum(Biomass_FWT, na.rm = T))
+
+arth_series_leafeaters <- zoo(arth_frame1_leafeaters$all_biomass, order.by = arth_frame$YMD)
+
+
+plot(arth_series_leafeaters, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "herbivores & detritovores")
+
+abline(v = as.Date("09-21-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+abline(v = as.Date("09-22-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+
+```
+
+
+```{r}
+
+arth_frame_trophic2 <- arth %>% filter(Trophic_Level == 2) %>% group_by(YMD, Trophic_Level) %>% summarize(all_biomass = sum(Biomass_FWT, na.rm = T))
+
+arth_series_trophic2 <- zoo(arth_frame_trophic2$all_biomass, order.by = arth_frame_trophic2$YMD)
+
+
+plot(arth_series_trophic2, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "trophic level 2")
+
+### HUGO DATES
+# abline(v = as.Date("09-17-1989", format = "%m-%d-%Y"), lty = 2, col = "blue")
+# abline(v = as.Date("09-18-1989", format = "%m-%d-%Y"), lty = 2, col = "blue")
+# abline(v = as.Date("09-19-1989", format = "%m-%d-%Y"), lty = 2, col = "blue")
+# abline(v = as.Date("09-20-1989", format = "%m-%d-%Y"), lty = 2, col = "blue")
+
+### GEORGES DATES
+abline(v = as.Date("09-21-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+abline(v = as.Date("09-22-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+
+```
+```{r}
+
+arth_frame_trophic3 <- arth %>% filter(Trophic_Level == 3) %>% group_by(YMD) %>% summarize(all_biomass = sum(Biomass_FWT, na.rm = T))
+
+arth_series_trophic3 <- zoo(arth_frame_trophic3$all_biomass, order.by = arth_frame_trophic3$YMD)
+
+plot(arth_series_trophic3, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "trophic level 3")
+
+abline(v = as.Date("09-21-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+abline(v = as.Date("09-22-1998", format = "%m-%d-%Y"), lty = 2, col = "blue")
+```
+
+```{r}
+# tiff("LUQ_4_arthropods.tiff", width = 16, height =20, units = "cm", compression = "lzw", res = 600)
+
+par(mar = c(4.1, 5.1, 1.1, 1.1),
+    mfrow = c(4,1))
+
+plot(arth_series, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "all arthropods", xlim = c(as.Date("1990-03-26", format = "%Y-%m-%d"), as.Date("2021-12-30", format = "%Y-%m-%d")))
+abline(v = as.Date("1998-09-22"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18"), col = "blue", lty = 2)
+
+plot(arth_series_leafeaters, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "herbivores & detritovores", xlim = c(as.Date("1990-03-26", format = "%Y-%m-%d"), as.Date("2021-12-30", format = "%Y-%m-%d")))
+abline(v = as.Date("1998-09-22"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18"), col = "blue", lty = 2)
+
+plot(arth_series_trophic2, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "trophic level 2", xlim = c(as.Date("1990-03-26", format = "%Y-%m-%d"), as.Date("2021-12-30", format = "%Y-%m-%d")))
+abline(v = as.Date("1998-09-22"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18"), col = "blue", lty = 2)
+
+
+plot(arth_series_trophic3, las = 1, xlab = "Date", ylab = expression("arthropod biomass (mg  g"^-1*" leaf mass)"), main = "trophic level 3", xlim = c(as.Date("1990-03-26", format = "%Y-%m-%d"), as.Date("2021-12-30", format = "%Y-%m-%d")))
+abline(v = as.Date("1998-09-22"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18"), col = "blue", lty = 2)
+
+# dev.off()
+```
+
+
+
+## gaps vs. closed canopy 
+
+# Litterfall
+```{r}
+## basket size for MRCE is: 0.16 m^2
+
+## basket size for CTE is: 0.185 m^2
+
+### adjust raw litterfall by basket areas to get litterfall rates
+
+litter$litterfall.g.m2 <- NULL
+
+for(i in 1:length(litter$Dataset)) {
+  if(litter$Dataset[i] == "MRCE_EV") {
+    litter$litterfall.g.m2[i] <- litter$`Total leaves_g`[i] * 0.16
+  } else if(litter$Dataset[i] == "CTE") {
+    litter$litterfall.g.m2[i] <- litter$`Total leaves_g`[i] * 0.185
+  }
+}
+
+```
+
+```{r}
+## process dataset 
+
+### start with summary datarframe
+### use the first time around just to get the ndays
+lf_summaryCTE  <- litter[litter$Dataset == "CTE",] %>% group_by(Date) %>% 
+                  summarize(mean_litterfall = mean(litterfall.g.m2, na.rm = T), 
+                            se_litterfall = plotrix::std.error(litterfall.g.m2, na.rm = T)) %>% 
+                  mutate(ndays = difftime(Date, lag(Date), units = "days"))
+
+lf_summaryCTE$ndays[1] <- lf_summaryCTE$ndays[2] ## make first time period 14 days -- equal to second time period
+
+lf_summaryMRCE  <- litter[litter$Dataset == "MRCE_EV",] %>% group_by(Date) %>% 
+                   summarize(mean_litterfall = mean(litterfall.g.m2, na.rm = T), 
+                             se_litterfall = plotrix::std.error(litterfall.g.m2, na.rm = T)) %>% 
+                   mutate(ndays = difftime(Date, lag(Date), units = "days"))
+
+lf_summaryMRCE$ndays[1] <- lf_summaryMRCE$ndays[2] ## make first time period 14 days -- equal to second time period
+
+
+## merge back into litter data.frame
+litter <- merge(litter, rbind(lf_summaryMRCE[,c("Date", "ndays")],  lf_summaryCTE[,c("Date", "ndays")]), by = "Date")  ## merge in
+
+## compute litterfall rates in grams per square meter per day
+litter$litterfall.g.m2.d <- litter$litterfall.g.m2/as.integer(litter$ndays)
+
+
+lf_summary <- litter %>% group_by(Date) %>% 
+              summarize(mean_lf_rate = mean(litterfall.g.m2.d, na.rm = T), 
+                        se_lf_rate = plotrix::std.error(litterfall.g.m2.d, na.rm = T))
+
+```
+
+
+```{r}
+
+
+lf_series <- zoo(lf_summary$mean_lf_rate, order.by = lf_summary$Date)
+
+lf_high <- zoo((lf_summary$mean_lf_rate + 1.96*lf_summary$se_lf_rate), order.by = lf_summary$Date)
+lf_low <- zoo((lf_summary$mean_lf_rate - 1.96*lf_summary$se_lf_rate), order.by = lf_summary$Date)
+
+
+
+# tiff("Litterfall_LUQ.tiff", width = 16, height =5.5, units = "cm", compression = "lzw", res = 600)
+
+par(mar = c(4.1, 5.1, 1.1, 1.1))
+
+plot(lf_series, las = 1, xlab = "Date", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"))
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+# dev.off()
+```
+
+# Calculate biomass ratio  -- 90 day window average
+
+```{r}
+lb_avgs <- NULL   ## create empty vector 
+
+## for loop to calculate the litterfall biomass averages
+
+### takes 180 day moving window
+for(i in 1:length(index(arth_series))) {
+  lb_avgs[i] <- mean(window(lf_series, start = index(arth_series)[i]-90, end = index(arth_series)[i]+90))
+  }
+
+## calculate ratio
+arth_lf_ratio <- (arth_series / 1000) / lb_avgs
+
+## divide numerator by 1000 to get mg to g 
+## units are per g leaf mass
+
+### calculat ratio for leaf eaters only, trophic level 2 and trophic level 3
+arth_lf_ratio_le <- (arth_series_leafeaters / 1000) / lb_avgs
+arth_lf_ratio2 <- (arth_series_trophic2 / 1000) / lb_avgs
+arth_lf_ratio3 <- (arth_series_trophic3 / 1000) / lb_avgs
+
+```
+
+### multiple plots 1 -- all arthropods
+
+```{r, fig.height = 8}
+
+par(mfrow = c(3,1), mar = c(4.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*" leaf mass)"), 
+     main = "CONSUMER -- all arthropods", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+#### plot ratio 
+plot(arth_lf_ratio, las = 1, xlab = " ", ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "all arthropod biomass-to-leaf litter Biomass Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+```
+
+
+### multiple plots 2 -- leaf-eating (aka herbivore and detritivore) arthropods
+
+```{r, fig.height = 8}
+
+par(mfrow = c(3,1), mar = c(4.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series_leafeaters, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*" leaf mass)"), 
+     main = "CONSUMER -- leaf eaters only", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+#### plot ratio 
+plot(arth_lf_ratio_le, las = 1, xlab = " ", ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "leaf-eating arthropods-to-leaf litterfall Biomass Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+```
+
+### multiple plots 3 -- Trophic level 2 arthropods
+
+```{r, fig.height = 8}
+
+par(mfrow = c(3,1), mar = c(4.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series_trophic2, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*" leaf mass)"), 
+     main = "CONSUMER -- trophic level 2 arthropods", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+#### plot ratio 
+plot(arth_lf_ratio2, las = 1, xlab = " ", ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "leaf-eating arthropods-to-leaf litterfall Biomass Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+```
+
+
+### multiple plots 4 -- Trophic level 3 arthropods
+
+```{r, fig.height = 8}
+
+par(mfrow = c(3,1), mar = c(4.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series_trophic3, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*" leaf mass)"), 
+     main = "CONSUMER -- trophic level 3 arthropods", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+#### plot ratio 
+plot(arth_lf_ratio3, las = 1, xlab = " ", ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "trophic level 3 arthropods-to-leaf litterfall Biomass Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+```
+
+# Z-score  transformed ratios
+
+### multiple plots 1 -- all arthropods
+
+```{r, fig.height = 8}
+
+
+tiff("LUQ_ratio-timeseries_ALLarth_07.26.2023.tiff", width = 19, height = 12, units = "cm", res = 600, compression = "lzw")
+
+par(mfrow = c(3,1), mar = c(2.1, 5.1, 1.1, 1.1) )
+
+plot(arth_series, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*")"), 
+     main = "CONSUMER -- all arthropods", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+#### plot ratio 
+plot(scale(arth_lf_ratio), las = 1, xlab = " ", 
+     ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "CONSUMER : PRODUCER Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(h=0, lty = 3)
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+dev.off()
+```
+
+
+### multiple plots 2 -- leaf-eating (aka herbivore and detritivore) arthropods
+
+```{r, fig.height = 8}
+
+tiff("LUQ_ratio-timeseries_07.26.2023.tiff", width = 19, height = 12, units = "cm", res = 600, compression = "lzw")
+
+par(mfrow = c(3,1), mar = c(2.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series_leafeaters, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*")"), 
+     main = "CONSUMER -- leaf eaters only", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+#### plot ratio 
+
+# par(mar = c(4.1, 5.1, 1.1, 1.1))
+
+plot(scale(arth_lf_ratio_le), las = 1, xlab = "Date", 
+     ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "CONSUMER : PRODUCER Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(h=0, lty = 3)
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+dev.off()
+```
+
+### multiple plots 3 -- Trophic level 2 arthropods
+
+```{r, fig.height = 8}
+
+par(mfrow = c(3,1), mar = c(4.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series_trophic2, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*" leaf mass)"), 
+     main = "CONSUMER -- trophic level 2 arthropods", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+#### plot ratio 
+plot(scale(arth_lf_ratio2), las = 1, xlab = " ", 
+     ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "leaf-eating arthropods-to-leaf litterfall Biomass Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(h=0, lty = 3)
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+```
+
+
+### multiple plots 4 -- Trophic level 3 arthropods
+
+```{r, fig.height = 8}
+
+par(mfrow = c(3,1), mar = c(4.1, 5.1, 1.1, 1.1) )
+
+
+plot(arth_series_trophic3, las = 1, xlab = " ", ylab = expression("arthropod biomass (mg g"^-1*" leaf mass)"), 
+     main = "CONSUMER -- trophic level 3 arthropods", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+plot(lf_series, las = 1, xlab = " ", ylab = expression("litterfall (g "*m^-2*" d"^-1*")"), 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")), 
+     main = "PRODUCER")
+lines(lf_high, lty = 3, col = "red")
+lines(lf_low, lty = 3, col = "red")
+
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+#### plot ratio 
+plot(scale(arth_lf_ratio3), las = 1, xlab = " ", 
+     ylab = expression("C:P ratio (g"^-1*" leaf mass)"), 
+     main = "trophic level 3 arthropods-to-leaf litterfall Biomass Ratio", 
+     xlim = c(as.Date("1987-01-01", format = "%Y-%m-%d"), as.Date("2022-01-01", format = "%Y-%m-%d")))
+
+abline(h=0, lty = 3)
+
+abline(v = as.Date("1989-09-17", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-19", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1989-09-20", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("1998-09-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("1998-09-22", format = "%Y-%m-%d"), col = "blue", lty = 2)
+
+
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-18", format = "%Y-%m-%d"), col = "blue", lty = 2)
+abline(v = as.Date("2017-07-21", format = "%Y-%m-%d"), col = "blue", lty = 2)
+```
+
+
+
+# Phase space diagram 
+```{r}
+phase_space.df1 <- data.frame(Date = index(arth_series),  producer = lb_avgs, consumer = arth_series/1000)
+
+# plot(phase_space.df$producer, phase_space.df1$consumer, xlab = "litterfall (g/m^2/d)", ylab = "arthropod biomass (g/g leaf mass)")
+
+```
+
+
+```{r}
+gg.phase_space <- ggplot(aes(x= producer, y = consumer), data = phase_space.df1) + 
+                  geom_abline(slope = 1, intercept = 0, lty = 3, col = "darkgray", size = 2) +
+                  geom_point() +
+                  ggrepel::geom_label_repel(aes(label = as.character(Date)), size = 2) + theme_classic() + 
+                  xlab(expression("litterfall (g "*m^-2*" d"^-1*")"))  +
+                  ylab(expression("arthropods (mg g"^-1*")")) + geom_abline()
+
+gg.phase_space
+```
+
+
+```{r}
+
+phase_space.df2 <- data.frame(Date = index(arth_series_leafeaters),  producer = lb_avgs, consumer = arth_series_leafeaters )
+
+```
+
+
