@@ -160,13 +160,15 @@ recovery_theme <- theme_bw() +
 
 # Make Tasseled Cap Greeness graph
 tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
-  geom_line(aes(group = sites), alpha=0.3, linewidth = 0.5, show.legend = F,
+  # Add a dashed line connecting missing parts of each sites' time series
+  geom_path(data = dplyr::filter(tcg_v2, !is.na(tcg_value)), 
+            linetype = "dashed", linewidth = 0.2, show.legend = F,
+            position = position_dodge(width = 0.2)) +
+  # Add a line that doesn't connect missing segments
+  geom_line(aes(group = sites), linewidth = 0.6, show.legend = F,
             position = position_dodge(width = 0.2)) +
   geom_point(aes(fill = sites), pch = 21, size = 2.5, alpha = 0.3,
              position = position_dodge(width = 0.2)) +
-  # Add a dashed line connecting missing parts of each sites' time series
-  # geom_line(linetype = "dashed", linewidth = 0.3, show.legend = F,
-  #           position = position_dodge(width = 0.2)) +
   # # Vertical line at disturbance date
   geom_vline(xintercept = as.Date("2017-06-15"),
              linetype = "dashed", linewidth = 0.5) +
