@@ -75,7 +75,7 @@ tcg_v2 <- tcg %>%
   # Get a real date column
   dplyr::mutate(date = as.Date(date_char)) %>%
   # Keep only after June of 2017
-  dplyr::filter(date > as.Date("2017-06-15")) %>%
+  dplyr::filter(date > as.Date("2014-06-15")) %>%
   # Divide tassled cap greenness (TCG) by 1000
   dplyr::mutate(tcg_value = value / 1000) %>%
   # Count months since disturbance
@@ -106,7 +106,7 @@ cs_v2 <- cs %>%
   # Get a real date column
   dplyr::mutate(date = as.Date(date_char)) %>%
   # Keep only after June of 2017
-  dplyr::filter(date > as.Date("2017-06-15")) %>%
+  dplyr::filter(date > as.Date("2014-06-15")) %>%
   # Divide condition score (CS) by 1000
   dplyr::mutate(cs_value = value / 1000) %>%
   # Count months since disturbance
