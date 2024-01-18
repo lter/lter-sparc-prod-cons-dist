@@ -60,6 +60,8 @@ tcg <- read.csv(file.path(HF_path, "2023_07_25_LTER_plots_monthly_tcg_mean.csv")
 tcg_v2 <- tcg %>%
   # Drop unwanted columns
   dplyr::select(dplyr::starts_with("X")) %>%
+  # Select just June averages for best disturbance visual without seasonality
+  dplyr::select(dplyr::contains(".06.")) %>%
   # Generate site column
   dplyr::mutate(sites = as.factor(1:nrow(x = .)), .before = dplyr::everything()) %>%
   # Flip to long format
@@ -75,7 +77,7 @@ tcg_v2 <- tcg %>%
   # Get a real date column
   dplyr::mutate(date = as.Date(date_char)) %>%
   # Keep only after June of 2017
-  dplyr::filter(date > as.Date("2014-06-15")) %>%
+  dplyr::filter(date > as.Date("2010-06-15")) %>%
   # Divide tassled cap greenness (TCG) by 1000
   dplyr::mutate(tcg_value = value / 1000) %>%
   # Count months since disturbance
@@ -91,6 +93,8 @@ dplyr::glimpse(tcg_v2)
 cs_v2 <- cs %>%
   # Drop unwanted columns
   dplyr::select(dplyr::starts_with("X")) %>%
+  # Select just June averages for best disturbance visual without seasonality
+  dplyr::select(dplyr::contains(".06.")) %>%
   # Generate site column
   dplyr::mutate(sites = as.factor(1:nrow(x = .)), .before = dplyr::everything()) %>%
   # Flip to long format
@@ -106,7 +110,7 @@ cs_v2 <- cs %>%
   # Get a real date column
   dplyr::mutate(date = as.Date(date_char)) %>%
   # Keep only after June of 2017
-  dplyr::filter(date > as.Date("2014-06-15")) %>%
+  dplyr::filter(date > as.Date("2010-06-15")) %>%
   # Divide condition score (CS) by 1000
   dplyr::mutate(cs_value = value / 1000) %>%
   # Count months since disturbance
@@ -153,6 +157,10 @@ recovery_theme <- theme_bw() +
 
 # Make Tasseled Cap Greeness graph
 tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites)) +
+  #Add background color for disturbance years:
+  geom_rect(data=NULL, aes(xmin=as.Date("2016-05-01"), xmax=as.Date("2017-07-15"),
+                           ymin=-Inf, ymax=Inf), alpha=0.2, show.legend = F,
+            fill = "light grey", color = NA) +
   geom_line(aes(group = sites), linewidth = 0.5, show.legend = F,
             position = position_dodge(width = 0.2)) +
   geom_point(aes(fill = sites), pch = 21, size = 2.5, color = "black", alpha = 0.8,
@@ -179,6 +187,10 @@ tcg_series <- ggplot(data = tcg_v2, aes(x = date, y = tcg_value, color = sites))
 
 # Make the same graph for condition score
 cs_series <- ggplot(data = cs_v2, aes(x = date, y = cs_value, color = sites)) +
+  #Add background color for disturbance years:
+  geom_rect(data=NULL, aes(xmin=as.Date("2016-05-01"), xmax=as.Date("2017-07-15"),
+                           ymin=-Inf, ymax=Inf), alpha=0.2, show.legend = F,
+            fill = "light grey", color = NA) +
   geom_line(aes(group = sites), linewidth = 0.5, show.legend = F,
             position = position_dodge(width = 0.2)) +
   geom_point(aes(fill = sites), pch = 21, size = 2.5, color = "black", alpha = 0.8,
